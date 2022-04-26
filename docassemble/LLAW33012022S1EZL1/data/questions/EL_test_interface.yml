@@ -1,0 +1,306 @@
+---
+imports:
+  - random
+---
+metadata:
+  title: |
+    Ezra Legal
+  authors:
+    - name: Sirage Tarakji
+  exit url: https://ezralegal.com.au/
+  error help: |
+    We are sorry.
+    An error has occurred.
+    Please [contact us](https://ezralegal.com.au/contact-us/).
+---
+features:
+  navigation: True
+  debug: False
+  hide standard menu: True
+  disable analytics: True
+  bootstrap theme: EL_custom_theme.css
+  inverse navbar: True
+  navigation back button: False
+  javascript: 
+    - ELC_JavaScript.js
+    - ELC_nprogress.js
+  css: 
+    - ELC_nprogress.css
+  popover trigger: hover
+---
+metadata:
+  footer: |
+    Liability limited by a scheme approved under professional standards legislation.
+  continue button label: |
+    Next <i class="fas fa-arrow-right ml-2"></i>
+---
+sections:
+  - name: Name
+  - welcome: Welcome
+---
+question: What is your name
+fields:
+  - no label: ELC_userName
+section: name
+---
+question: Security Check
+subquestion: |
+  <aside id="ELC_questionControls">
+    % if ELC_SC_AttemptsRemaining != ELC_SC_attemptsAllowed:
+      <span id="animationOptions" data-elc-animation-disabled="true"></span>
+    % endif
+    <span id="hideElements" data-elc-hide='["buttons", "radioOptions"]'></span>
+  </aside>
+
+  Please win the game:
+  % if ELC_SC_AttemptsRemaining != ELC_SC_attemptsAllowed:
+  <p class="text-danger">Incorrect! ${ ELC_SC_AttemptsRemaining } ${ noun_plural("attempt", ELC_SC_AttemptsRemaining) } remaining </p>
+  % endif
+  
+  <div id="ELC_TTTContainer" ${'class="loading"' if ELC_SC_AttemptsRemaining != ELC_SC_attemptsAllowed else ''}></div>
+script: |
+  <script>
+    const TTTGenerate = () => {
+      var TTTCombination = ${ELC_SC_randBoard};
+      var TTTBoxes = []
+      var TTTAnswerChecked = false;
+  
+      TTTCombination.forEach((value, index) => {
+        const _v = value == 'E' ? '' : value
+        let _box = '<div data-ELCindex="' + index + '"><span>' + _v + '</span></div>';
+        let _boxEl = $(_box);
+        if (value == 'X') {
+          _boxEl.attr('class', 'accent');
+        }
+        if (value != 'E') {
+          _boxEl.addClass('disabled');
+        }
+        if (value == 'E') {
+          _boxEl.on('click', (e) => {
+            if (!TTTAnswerChecked) {
+              $(e.target).html('X');
+              $(e.target).attr('class', 'accent');
+              $('#ELC_TTTContainer > div').addClass('disabled')
+              let _index = e.target.dataset.elcindex;
+              $('.da-field-radio > label')[_index].click()
+              TTTAnswerChecked = true
+              $('.da-field-buttons .btn-da.btn-primary').click()
+            }
+          });
+        }
+        TTTBoxes.push(_boxEl);
+      });
+      $('#ELC_TTTContainer').html(TTTBoxes);
+      setTimeout(() => {
+        $('#ELC_TTTContainer').removeClass('loading');
+      }, 200);
+    };
+
+    TTTGenerate();
+  </script>
+fields: 
+  - no label: ELC_securityAnswer
+    datatype: radio
+    code: |
+      ELC_SC_options      
+---
+code: |
+  ELC_SC_options = []
+  for ELC_SC_arr in range(9):
+    ELC_SC_options.append({ELC_SC_arr: "Tile " + str( ELC_SC_arr + 1 )})
+---
+code: |
+  ELC_SC_attemptsAllowed = 3
+  ELC_SC_AttemptsRemaining = 3 
+  ELC_SC_Combinations = [
+    [
+      ['X', 'O', 'E', 
+       'O', 'X', 'E', 
+       'E', 'E', 'E'],
+      '8'
+    ],
+    [
+      ['E', 'O', 'E', 
+       'O', 'X', 'E', 
+       'E', 'E', 'X'],
+      '0'
+    ],
+    [
+      ['E', 'O', 'X', 
+       'O', 'E', 'X', 
+       'E', 'E', 'E'],
+      '8'
+    ],
+    [
+      ['E', 'O', 'E', 
+       'O', 'E', 'X', 
+       'E', 'E', 'X'],
+      '2'
+    ],
+    [
+      ['E', 'O', 'E', 
+       'O', 'E', 'E', 
+       'X', 'X', 'E'],
+      '8'
+    ],
+    [
+      ['E', 'O', 'E', 
+       'O', 'E', 'E', 
+       'E', 'X', 'X'],
+      '6'
+    ],
+    [
+      ['X', 'X', 'E', 
+       'O', 'E', 'E', 
+       'E', 'O', 'E'],
+      '2'
+    ],
+    [
+      ['E', 'X', 'X', 
+       'O', 'E', 'E', 
+       'E', 'O', 'E'],
+      '0'
+    ],
+    [
+      ['E', 'E', 'E', 
+       'O', 'X', 'E', 
+       'X', 'O', 'E'],
+      '2'
+    ],
+    [
+      ['E', 'E', 'X', 
+       'O', 'X', 'E', 
+       'E', 'O', 'E'],
+      '6'
+    ],
+    [
+      ['E', 'O', 'E', 
+       'X', 'X', 'E', 
+       'E', 'O', 'E'],
+      '5'
+    ],
+    [
+      ['E', 'O', 'E', 
+       'E', 'X', 'X', 
+       'E', 'O', 'E'],
+      '3'
+    ],
+    [
+      ['O', 'E', 'E', 
+       'X', 'E', 'X', 
+       'E', 'O', 'E'],
+      '4'
+    ],
+    [
+      ['E', 'E', 'O', 
+       'E', 'O', 'E', 
+       'X', 'E', 'X'],
+      '7'
+    ],
+    [
+      ['X', 'E', 'X', 
+       'E', 'O', 'E', 
+       'O', 'E', 'E'],
+      '1'
+    ],
+    [
+      ['E', 'E', 'X', 
+       'E', 'O', 'E', 
+       'O', 'E', 'X'],
+      '5'
+    ],
+    [
+      ['X', 'E', 'E', 
+       'E', 'O', 'E', 
+       'X', 'E', 'O'],
+      '3'
+    ]
+  ]
+  ELC_SC_resetter
+  ELC_SC_init = True
+---
+code: |
+  ELC_SC_randomIndex = random.randint(0, len(ELC_SC_Combinations) - 1)
+  ELC_SC_correctAnswer = ELC_SC_Combinations[ELC_SC_randomIndex][1]
+  ELC_SC_randBoard = ELC_SC_Combinations[ELC_SC_randomIndex][0]
+  ELC_SC_resetter = True
+---
+code: |
+  ELC_SC_init
+  ELC_SC_AnswerIsCorrect = ELC_securityAnswer == ELC_SC_correctAnswer
+  if ELC_SC_AnswerIsCorrect:
+    ELC_SC_passed = True
+  else:
+    # wrong answer, give user another attempt if allowed
+    ELC_SC_AttemptsRemaining -= 1
+    if ELC_SC_AttemptsRemaining > 0:
+      del ELC_securityAnswer
+      del ELC_SC_resetter
+      # this resetter is used to force Docassemble to rerun this code block without
+      # causing infinite loop and to regenerate a tic tac toe board.
+      # This is because every time docassemble encounters undefined value 
+      # (such as in this case because of `del` above) it fetches the value and 
+      # then re-run the code block from the begnning. 
+      # In this case, it encounters `ELC_SC_resetter` which is undefined; 
+      # therefore it goes to the other code block that defines this variable 
+      # and run it. It then comes back here and sees that `ELC_securityAnswer` is
+      # undefined (because we deleted it above) and run the corresponding question
+      # to define it. This process is repeated until no more attempts are remaining.
+      ELC_SC_resetter
+    else:
+      ELC_SC_passed = False   
+---
+mandatory: True
+code: |
+  ELC_userName
+  if ELC_SC_passed:
+    # user is human
+    ELC_ScreenWelcome
+  else:
+    # not human or run out of attempts; kick out robot
+    ELC_ScreenSecruityCheckFailed
+---
+code: |
+  ### Control sections programatically 
+  # If secruity check was not passed, remove incomplete sections (keep completed ones),
+  # and insert a final section for the security check message.
+  ###
+  
+  # new section for secruity check message
+  ELC_SC_section = {"check": "Security Check"}
+  # get all section
+  ELC_originalSections = nav.get_sections()
+  # get current section (this is the last section the user visited before 
+  # the security check was displayed)
+  ELC_currentSection = nav.get_section()
+  # the index of the current section using a generator expression
+  ELC_currentSectionIndex = next(_ELC_i for _ELC_i, _ELC_sectionDict in enumerate(ELC_originalSections) if ELC_currentSection in _ELC_sectionDict.keys())
+  # return all sections before, and including, the current section
+  ELC_sectionsPassed = ELC_originalSections[:ELC_currentSectionIndex+1]
+  # add the security check section as the last one
+  ELC_sectionsPassed.append(ELC_SC_section)
+  # replace sections with the newly created one
+  nav.set_sections(ELC_sectionsPassed)
+  # set the current section to this page
+  nav.set_section('check')
+  # inform the final screen that all done
+  ELC_SC_setFinalScreen = True
+---
+need: ELC_SC_setFinalScreen
+event: ELC_ScreenSecruityCheckFailed
+question: Please try again later
+subquestion: |
+  ${capitalize(ELC_userName)}, we could not confirm that you are not a robot. Please try again later!
+buttons:
+  - Again: restart
+  - Exit: exit
+---
+event: ELC_ScreenWelcome
+question: Well done, ${ELC_userName}
+subquestion: |
+  You have passed the test and proved you are not a robot.
+buttons:
+  - Restart: restart
+  - Exit: exit
+section: welcome
+---
