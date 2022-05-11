@@ -1,0 +1,29 @@
+---
+include:
+ - EL_SecurityCheck.yml
+ - EL_PersonalDetails.yml
+ - EL_LegalProblem.yml
+ - EL_OtherIssues.yml
+ - EL_Commercial.yml
+ - EL_WillsEstates.yml
+ - EL_ITandDataPrivacy.yml
+ - EL_Taxation.yml
+ - EL_FamilyLaw.yml
+ - EL_BuyingSellingProperty.yml
+ - EL_DisputeResolutionLitigation.yml
+ - EL_BuildingConstructionInfrastructure.yml
+ - EL_FishingFarmingAquaculture.yml
+ - EL_Review.yml
+ - EL_SaveResume.yml
+ - EL_SupportingDocumentation.yml
+---
+mandatory: True
+code: |
+ EL_Screen_Welcome
+ EL_SecurityCheck
+ EL_ContactDetails
+ if EL_LegalProblem == "Other":
+   EL_OtherIssues
+ EL_SupportingDocumentation
+ EL_Review 
+---
