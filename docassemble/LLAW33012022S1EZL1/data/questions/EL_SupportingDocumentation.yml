@@ -1,0 +1,18 @@
+--- 
+code: |
+  nav.set_section('docs')
+  if EL_hasSupportingDocs:
+    EL_supportingDocs
+  # the below variable tells Docassemble to run this block/file
+  EL_SupportingDocumentation = True
+---
+question: Supporting Documentation
+subquestion: Do you wish to submit any supporting documentation?
+yesno: EL_hasSupportingDocs
+---
+question: Supporting Documentation
+subquestion: Please upload the documents below
+fields:
+  - no label: EL_supportingDocs
+    datatype: files
+---

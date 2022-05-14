@@ -1,0 +1,29 @@
+---
+code: |
+  # NOTE 1. the variable `EL_legalProblemSectionQs` is used to store all questions for which user provided an answer. This is going to be useful later when programmatically generating tabels for the review screen and the docx template.
+  EL_legalProblemSectionQs = []
+  # set current step to 'Legal Problem'
+  nav.set_section('problem')
+  # ask user what type of legal problem 
+  EL_AskLegalProblem
+  # add `EL_AskLegalProblem` to the list of asked questions - see NOTE 1
+  EL_legalProblemSectionQs.append({"question": "Problem Area", "variable_name": "EL_AskLegalProblem"})
+  # tell DA to run this code block when encountering `EL_LegalProblem`
+  EL_LegalProblem = True
+---
+question: What is your problem about?
+subquestion: |
+  Please select an area that you think best fit your matter
+field: EL_AskLegalProblem
+choices:
+  - Commercial law
+  - Wills and Estate
+  - Family Law
+  - Taxation
+  - Dispute Resolution and Litigation
+  - Information Technology and Data Privacy
+  - Building, Construction and Infrastructure
+  - Farming, Fishing and Aquaculture
+  - Buying or Selling Property 
+  - Other/Unsure
+---

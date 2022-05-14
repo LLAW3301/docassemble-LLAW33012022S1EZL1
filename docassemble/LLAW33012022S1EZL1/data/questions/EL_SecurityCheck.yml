@@ -1,0 +1,262 @@
+---
+imports:
+  - random
+---
+prevent going back: True
+question: Security Check
+subquestion: |
+  <aside id="ELC_questionControls">
+    % if ELC_SC_AttemptsRemaining != ELC_SC_attemptsAllowed:
+      <span id="animationOptions" data-elc-animation-disabled="true"></span>
+    % endif
+    <span id="hideElements" data-elc-hide='["buttons", "radioOptions"]'></span>
+  </aside>
+
+  Please win the game:
+  % if ELC_SC_AttemptsRemaining != ELC_SC_attemptsAllowed:
+  <p class="text-danger">Incorrect! ${ ELC_SC_AttemptsRemaining } ${ noun_plural("attempt", ELC_SC_AttemptsRemaining) } remaining </p>
+  % endif
+  
+  <div id="ELC_TTTContainer" ${'class="loading"' if ELC_SC_AttemptsRemaining != ELC_SC_attemptsAllowed else ''}></div>
+script: |
+  <script>
+    // Generate and render tic-tac-toe board using Javascript
+    const TTTGenerate = () => {
+      var TTTCombination = ${ELC_SC_randBoard};
+      var TTTBoxes = []
+      var TTTAnswerChecked = false;
+  
+      TTTCombination.forEach((value, index) => {
+        const _v = value == 'E' ? '' : value
+        let _box = '<div data-ELCindex="' + index + '"><span>' + _v + '</span></div>';
+        let _boxEl = $(_box);
+        if (value == 'X') {
+          _boxEl.attr('class', 'accent');
+        }
+        if (value != 'E') {
+          _boxEl.addClass('disabled');
+        }
+        if (value == 'E') {
+          _boxEl.on('click', (e) => {
+            if (!TTTAnswerChecked) {
+              $(e.target).html('X');
+              $(e.target).attr('class', 'accent');
+              $('#ELC_TTTContainer > div').addClass('disabled')
+              let _index = e.target.dataset.elcindex;
+              $('.da-field-radio > label')[_index].click()
+              TTTAnswerChecked = true
+              $('.da-field-buttons .btn-da.btn-primary').click()
+            }
+          });
+        }
+        TTTBoxes.push(_boxEl);
+      });
+      $('#ELC_TTTContainer').html(TTTBoxes);
+      setTimeout(() => {
+        $('#ELC_TTTContainer').removeClass('loading');
+      }, 200);
+    };
+
+    TTTGenerate();
+  </script>
+fields: 
+  - no label: ELC_securityAnswer
+    datatype: radio
+    code: |
+      ELC_SC_options      
+---
+code: |
+  # generate options for security question (Tile 1-9)
+  ELC_SC_options = []
+  for ELC_SC_arr in range(9):
+    ELC_SC_options.append({ELC_SC_arr: "Tile " + str( ELC_SC_arr + 1 )})
+---
+code: |
+  ## Initialise required values
+  
+  # number of allowed attempt
+  ELC_SC_attemptsAllowed = 3
+  # remaining attempts (decrements each time by 1)
+  ELC_SC_AttemptsRemaining = 3 
+  # predefined boards from which one will be randomly selected. Each item is an array
+  # the first item is board structure and second one is the correct answer/tile
+  ELC_SC_Combinations = [
+    [
+      ['X', 'O', 'E', 
+       'O', 'X', 'E', 
+       'E', 'E', 'E'],
+      '8'
+    ],
+    [
+      ['E', 'O', 'E', 
+       'O', 'X', 'E', 
+       'E', 'E', 'X'],
+      '0'
+    ],
+    [
+      ['E', 'O', 'X', 
+       'O', 'E', 'X', 
+       'E', 'E', 'E'],
+      '8'
+    ],
+    [
+      ['E', 'O', 'E', 
+       'O', 'E', 'X', 
+       'E', 'E', 'X'],
+      '2'
+    ],
+    [
+      ['E', 'O', 'E', 
+       'O', 'E', 'E', 
+       'X', 'X', 'E'],
+      '8'
+    ],
+    [
+      ['E', 'O', 'E', 
+       'O', 'E', 'E', 
+       'E', 'X', 'X'],
+      '6'
+    ],
+    [
+      ['X', 'X', 'E', 
+       'O', 'E', 'E', 
+       'E', 'O', 'E'],
+      '2'
+    ],
+    [
+      ['E', 'X', 'X', 
+       'O', 'E', 'E', 
+       'E', 'O', 'E'],
+      '0'
+    ],
+    [
+      ['E', 'E', 'E', 
+       'O', 'X', 'E', 
+       'X', 'O', 'E'],
+      '2'
+    ],
+    [
+      ['E', 'E', 'X', 
+       'O', 'X', 'E', 
+       'E', 'O', 'E'],
+      '6'
+    ],
+    [
+      ['E', 'O', 'E', 
+       'X', 'X', 'E', 
+       'E', 'O', 'E'],
+      '5'
+    ],
+    [
+      ['E', 'O', 'E', 
+       'E', 'X', 'X', 
+       'E', 'O', 'E'],
+      '3'
+    ],
+    [
+      ['O', 'E', 'E', 
+       'X', 'E', 'X', 
+       'E', 'O', 'E'],
+      '4'
+    ],
+    [
+      ['E', 'E', 'O', 
+       'E', 'O', 'E', 
+       'X', 'E', 'X'],
+      '7'
+    ],
+    [
+      ['X', 'E', 'X', 
+       'E', 'O', 'E', 
+       'O', 'E', 'E'],
+      '1'
+    ],
+    [
+      ['E', 'E', 'X', 
+       'E', 'O', 'E', 
+       'O', 'E', 'X'],
+      '5'
+    ],
+    [
+      ['X', 'E', 'E', 
+       'E', 'O', 'E', 
+       'X', 'E', 'O'],
+      '3'
+    ]
+  ]
+  # randomly select a board and define correct answer
+  ELC_SC_resetter
+  # initialisation done
+  ELC_SC_init = True
+---
+code: |
+  # randomly select a tic-tac-toe board
+
+  # generate a random number based on the length of the available boards
+  ELC_SC_randomIndex = random.randint(0, len(ELC_SC_Combinations) - 1)
+  # extract correct answer from the second item of the selected board array
+  ELC_SC_correctAnswer = ELC_SC_Combinations[ELC_SC_randomIndex][1]
+  # extrat the board structure from the first item
+  ELC_SC_randBoard = ELC_SC_Combinations[ELC_SC_randomIndex][0]
+  ELC_SC_resetter = True
+---
+code: |
+  # initialise required variables
+  ELC_SC_init
+  # present the security question and check if answer is correct
+  ELC_SC_AnswerIsCorrect = ELC_securityAnswer == ELC_SC_correctAnswer
+  # if correct user passed
+  if ELC_SC_AnswerIsCorrect:
+    EL_SecurityCheckPassed = True
+  else:
+    # wrong answer, give user another attempt if available
+    # decrement remaining attempts
+    ELC_SC_AttemptsRemaining -= 1
+    if ELC_SC_AttemptsRemaining > 0:
+      # attempts remaining; reask user.
+      
+      # delete the current answer so the next time the block runs it will be undefined
+      # and docassemble will automaticaly re-ask the question at 
+      # `ELC_SC_AnswerIsCorrect` above
+      del ELC_securityAnswer
+      del ELC_SC_resetter
+      # this resetter is used to force Docassemble to rerun this code block without
+      # causing infinite loop and to regenerate a tic tac toe board.
+      # This is because every time docassemble encounters undefined value 
+      # (such as in this case because of `del` above) it fetches the value and 
+      # then re-run the code block from the begnning. 
+      # In this case, it encounters `ELC_SC_resetter` which is undefined; 
+      # therefore it goes to the other code block that defines this variable 
+      # and run it. It then comes back here and sees that `ELC_securityAnswer` is
+      # undefined (because we deleted it above) and run the corresponding question
+      # to define it. This process is repeated until no more attempts are remaining.
+      ELC_SC_resetter
+    else:
+      # user failed all attempts
+      EL_SecurityCheckPassed = False   
+---
+prevent going back: True
+event: EL_SecruityCheckFailedScreen
+question: Please try again later
+subquestion: |
+  <aside id="ELC_questionControls">
+    <span id="hideElements" data-elc-hide='["buttons"]'></span>
+  </aside>
+  
+  We could not confirm that you are not a robot. Please try again in <span id="SCcountDown">10</span>
+script: |
+  <script>
+    var timeLeft = 10;
+    var timer = setInterval(function (){
+      timeLeft--
+      $('#SCcountDown').html(timeLeft);
+      if (timeLeft == 0){
+        $('.da-field-buttons').show()
+        clearInterval(timer)
+      }
+    }, 1000); 
+  </script>
+buttons:
+  - Try Again: restart
+  - Exit: exit
+---

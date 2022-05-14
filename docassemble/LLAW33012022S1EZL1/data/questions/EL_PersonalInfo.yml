@@ -1,0 +1,52 @@
+---
+objects:
+  - EL_User: Individual
+---
+code: |
+  nav.set_section('personal')
+  # gather personal information 
+  EL_User.name.first
+  EL_User.name.middle
+  EL_User.name.last
+  EL_User.birthdate
+  EL_User.gender
+  
+  # gather contact details
+  EL_User.email
+  EL_User.phone_number
+  EL_User.PreferredContact
+  
+  # the variable below is used to tell docassemble to run this file
+  EL_PersonalInformation = True
+---
+question: Personal Information
+fields:
+  - First Name: EL_User.name.first
+  - Middle Name: EL_User.name.middle
+    required: False
+  - Last Name: EL_User.name.last
+  - Date of Birth: EL_User.birthdate
+    datatype: date
+  - Gender: EL_User.gender
+    input type: radio
+    choices:
+      - Male: male
+      - Female: female
+      - Other: other
+---
+question: Contact Details
+fields:
+  - Email address: EL_User.email
+    datatype: email
+  - Phone number: EL_User.phone_number
+    minlength: 10
+    maxlength: 10
+  - Preferred contact method: EL_User.PreferredContact
+    input type: radio
+    choices:
+      - Phone
+      - Email
+validation code: |
+  if not phone_number_is_valid(EL_User.phone_number, country='AU'):
+    validation_error('Please enter a phone number valid for Australia.', field='EL_User.phone_number')
+---  

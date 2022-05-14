@@ -1,0 +1,120 @@
+---
+code: |
+  # set step to 'submit'
+  nav.set_section('submit')
+  # allow user to review answers
+  if EL_userFinalAction == 'submit':
+    # if user submits the form, send email to user and Ezra
+    EL_sendEmails
+    # hide navigation items on the side
+    nav.hide()
+    # show confirmation message
+    EL_confirmSubmit  
+  else:
+    # hide navigation items on the side
+    nav.hide()
+    # confirm to user that their answers have been deleted
+    EL_confirmCancel
+  EL_Review = True
+---
+code: |
+  # the file containing all answers is assembled using a docx template and the attachement block below (EL_compiledAnswers).
+  # emails are constructed in their separate template blocks below (EL_Template_EzraEmail and EL_Template_UserEmail)
+  
+  # the attachements sent must include the compiled answers but should only include uploaded files if they exist
+  EL_emailAttachments = [EL_compiledAnswers]
+  if EL_hasSupportingDocs:
+    EL_emailAttachments.append(EL_supportingDocs)
+  # send emails to user and ezra, containing compiled answers and any attachments
+  EL_userEmailSentOk = send_email(to=EL_User, template=EL_Template_ClientEmail, attachments=[EL_compiledAnswers])
+  # TODO: EL_EzraEmailSentOk = send_email(to=EL_ClientEmailAddress, template=EL_Template_EzraEmail, attachments=[EL_compiledAnswers])
+  
+  EL_sendEmails = True
+---
+template: EL_Template_EzraEmail
+subject: |
+  New client request has been received!
+content: |
+  ${ EL_User.name } needs your legal assistance
+  % if EL_AskLegalProblem == 'Other/Unsure':
+    but ${ EL_User.pronoun_possessive('issue') } might not be covered by your practice areas.
+  % else:
+    with ${ indefinite_article(EL_AskLegalProblem) } matter.
+  % endif
+  
+  For further details, please find attached ${ EL_User.pronoun_possessive('answers') }
+  % if EL_hasSupportingDocs: 
+  and the supporting documents ${ EL_User.pronoun_subjective() } uploaded 
+  % endif
+  .
+  
+  Regards
+---
+template: EL_Template_ClientEmail
+subject: |
+  Thank you for contacting Ezra Legal
+content: |
+  Dear ${ EL_User.salutation(with_name=True) },  
+
+  We wanted to let you know that we have received your query. We will be in touch shortly.  
+  For the meantime, please find attached a copy of what we have received. 
+  
+  Should you have any question or concern, please do not hesitate to contact us on (08) 8231 6100 or via email at admin@ezralegal.com.au.
+
+  Kind regards,  
+  Ezra Legal
+---
+attachment:
+  - name: Compiled Answers
+    filename: Answers
+    variable name: EL_compiledAnswers
+    description: |
+      Contains all answers provided in this interview session.
+    docx template file: compiled_answers.docx
+    valid formats:
+    - pdf
+---
+question: Review your answers
+subquestion: |
+  Please check that your answers below are correct before submitting.
+field: EL_userFinalAction
+buttons:
+  - Submit: submit
+  - Cancel: cancel
+---
+prevent going back: True
+event: EL_confirmSubmit
+question: Thank you for your request
+subquestion: |
+  We have received your enquiry and will get in touch as soon as possible. A confirmation has been sent to the email address you have provided.
+buttons:
+  - Return to homepage: exit
+post: |
+  <br>
+  <hr>
+  <br>
+  * **For demonstration purposes only**, previews of the emails and assembled documents are shown below. (NOTE: if you entered a genuine email at the Contact Details page you should also recieve an email — as user not Ezra)
+  
+  **Compiled Answers**
+  
+  ${ EL_compiledAnswers }
+  
+  <br> 
+  **Email to Ezra**
+  
+  ${ EL_Template_EzraEmail.show() }
+  
+---
+prevent going back: True
+event: EL_confirmCancel
+question: Answers deleted
+subquestion: |
+  We have deleted your answers 
+  % if EL_hasSupportingDocs: 
+  and all files you have uploaded 
+  % endif
+  .
+buttons:
+  - Restart: restart
+  - Exit: exit
+---

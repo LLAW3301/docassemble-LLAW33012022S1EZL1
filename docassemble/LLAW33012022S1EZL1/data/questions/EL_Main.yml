@@ -1,7 +1,9 @@
 ---
 include:
  - EL_SecurityCheck.yml
- - EL_PersonalDetails.yml
+ - EL_PersonalInfo.yml
+ - EL_Review.yml
+ - EL_SaveResume.yml
  - EL_LegalProblem.yml
  - EL_OtherIssues.yml
  - EL_Commercial.yml
@@ -13,17 +15,99 @@ include:
  - EL_DisputeResolutionLitigation.yml
  - EL_BuildingConstructionInfrastructure.yml
  - EL_FishingFarmingAquaculture.yml
- - EL_Review.yml
- - EL_SaveResume.yml
  - EL_SupportingDocumentation.yml
+---
+metadata:
+  title: |
+    Ezra Legal
+  exit url: https://ezralegal.com.au/
+  error help: |
+    We are sorry.
+    An error has occurred.
+    Please [contact us](https://ezralegal.com.au/contact-us/).
+---
+features:
+  navigation: True
+  labels above fields: True
+  # debug: False
+  hide standard menu: True
+  disable analytics: True
+  bootstrap theme: EL_custom_theme.css
+  inverse navbar: True
+  # navigation back button: False
+  javascript: 
+    - ELC_JavaScript.js
+    - ELC_nprogress.js
+  css: 
+    - ELC_nprogress.css
+  popover trigger: hover
+---
+metadata:
+  footer: |
+    Liability limited by a scheme approved under professional standards legislation.
+  continue button label: |
+    Next <i class="fas fa-arrow-right ml-2"></i>
+---
+sections:
+  - welcome: Security Check
+  - problem: Legal Problem
+  - docs: Supporting Documents
+  - personal: Personal Information
+  - submit: Review and Submit
 ---
 mandatory: True
 code: |
- EL_Screen_Welcome
- EL_SecurityCheck
- EL_ContactDetails
- if EL_LegalProblem == "Other":
-   EL_OtherIssues
- EL_SupportingDocumentation
- EL_Review 
+  # the steps/sections on the side are initially hidden until user begins the process
+  nav.hide()
+  # show welcome (initial) screen and make sure user agrees to the Privacy Notice
+  EL_Screen_Welcome
+  # show the steps now to inform user how many steps are roughly remaining
+  nav.unhide()
+  # ask security question 
+  if not EL_SecurityCheckPassed: ### not human or run out of attempts (kick out robot)
+    EL_SecruityCheckFailedScreen
+  else: ### user passed test so proceed with interview
+    # ask user what area of law they need help with and ask questions accordingly
+    EL_LegalProblem
+    # check if user has documents they want to upload and store them if so
+    EL_SupportingDocumentation
+    # collect personal and contact information
+    EL_PersonalInformation
+    # allow user to review and confirm answers for last time before submission
+    EL_Review 
 ---
+question: We are here to help!
+subquestion: |
+  This form offers a convenient way for you to tell us about your issue so we can help as soon as possible. 
+  
+  Get started by clicking continue, and rest assured as using this form is free of charge. 
+  
+  
+  <br>
+  **By continuing you agree to the** <a href="#" data-toggle="modal" data-target="#PrivacyNoticeModal">
+    Privacy Notice.
+  </a>
+  <div class="modal fade" id="PrivacyNoticeModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="PrivacyModalLongTitle">Privacy Notice</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          We collect personal information to assess your matter. All information will be securely stored, kept confidential, and only handled as allowed by the *Privacy Act 1988* (Cth).
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>  
+buttons: 
+  - Agree and Continue:
+      code: |
+        EL_Screen_Welcome = True
+  - Exit: exit
+section: welcome

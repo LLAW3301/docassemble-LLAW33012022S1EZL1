@@ -5,11 +5,11 @@
 var ELC_step = 0;
 
 $(document).on('daPageLoad', function () {
-  // Question custom settings
+  // custom settings per question. controlled by a hidden span element in the question block
   if ($('#ELC_questionControls').length > 0) {
-    // Hiding elements
+    // code for hiding elements automatically
     if ($('#ELC_questionControls #hideElements').length > 0) {
-      // hide any elements listed, can either be a custom name or css selector
+      // hide any elements listed in the data attribute `elcHide` - can either be a custom name or css selector
       let elementToHide = $('#ELC_questionControls #hideElements').data(
         'elcHide'
       );
@@ -28,10 +28,12 @@ $(document).on('daPageLoad', function () {
       });
     }
   }
+  // disable animation for specific question if the `elcAnimationDisabled` is true
   const ELC_JS_disableAnimation = !!$(
     '#ELC_questionControls #animationOptions'
   ).data('elcAnimationDisabled');
 
+  // animate question entry if animation is not disabled and the page is not loading for the first time (user navigated from a previous question)
   if (ELC_step == daSteps && !ELC_JS_disableAnimation) {
     const ELC_JS_customAnimationClass =
       $('#ELC_questionControls #animationOptions').data('elcAnimation') ??
@@ -41,7 +43,13 @@ $(document).on('daPageLoad', function () {
 
     // $('.danavlinks').addClass('ELC-animatingStepsIn');
   }
+  // keep track of number of completed questions
   ELC_step = daSteps + 1;
+
+  // move back button to above question (default position is in navbar)
+  $('#dabackbutton').prependTo('.da-page-header');
+
+  // replace navbar with a custom one
   $('.navbar.fixed-top').replaceWith(
     `<nav class="container-fluid px-7 py-sm-4 py-5 px-4 ELC-header navbar navbar-expand-xl" style="
     justify-content: space-between;
@@ -73,6 +81,7 @@ $(document).on('daPageLoad', function () {
 </nav>`
   );
 
+  // replace footer with custom one
   $('footer.dafooter').replaceWith(
     `<footer class="ELC-footer bg-dark text-light"> 
       <div class="row">
@@ -116,7 +125,7 @@ $(document).on('daPageLoad', function () {
   // daValidator.numberOfInvalids() != 0
 });
 
-// Method 2
+// Method 2 - show loading bar at top
 $(document).ajaxStart(() => {
   if (daSpinnerTimeout != null) {
     NProgress.start();
@@ -124,7 +133,7 @@ $(document).ajaxStart(() => {
 });
 
 $(document).ajaxStop(() => {
-  // show progress bar at the top
+  // hide loading progress bar when ajax request is done
   if (NProgress) {
     NProgress.done();
   }
