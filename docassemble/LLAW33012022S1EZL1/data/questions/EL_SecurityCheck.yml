@@ -236,7 +236,7 @@ code: |
       EL_SecurityCheckPassed = False   
 ---
 prevent going back: True
-event: EL_SecruityCheckFailedScreen
+event: EL_Screen_SecruityCheckFailed
 question: Please try again later
 subquestion: |
   <aside id="ELC_questionControls">

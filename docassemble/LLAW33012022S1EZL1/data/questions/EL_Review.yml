@@ -15,7 +15,9 @@ code: |
     nav.hide()
     # confirm to user that their answers have been deleted
     EL_confirmCancel
-  EL_Review = True
+    
+  # tell DA to run this file/code block when encountering the below variable
+  EL_ReviewSection = True
 ---
 code: |
   # the file containing all answers is assembled using a docx template and the attachement block below (EL_compiledAnswers).
@@ -74,9 +76,84 @@ attachment:
     valid formats:
     - pdf
 ---
-question: Review your answers
+question: Review & Submit
 subquestion: |
   Please check that your answers below are correct before submitting.
+  
+  <br>
+  <div class="card">
+    <h5 class="card-header" style="border-bottom: none;display: flex;align-items: center;justify-content: flex-start;">
+      <span style="flex: 1;"> Personal Information </span>
+      <a href="${ url_ask('EL_User.name.first') }" class="btn btn-info">Edit</a>
+    </h5>
+    <div class="card-body">
+      <div class="container-fluid">
+        % for EL_Q in EL_PersonalInfoSectionQs:
+        % if loop.index > 0:
+        <hr>
+        % endif
+        <div class="row" style="align-items: center;">
+          <div class="col-auto">
+            ${ EL_Q['question'] } 
+          </div>
+          <div class="col">
+            % if defined(EL_Q['variable_name']):
+            ${ value(EL_Q['variable_name']) }
+            % endif
+          </div>
+        </div>
+        % endfor
+      </div>
+    </div>
+  </div>
+  
+  <br>
+  <div class="card">
+    <h5 class="card-header" style="border-bottom: none;display: flex;align-items: center;justify-content: flex-start;">
+      <span style="flex: 1;"> Contact Details </span>
+      <a href="${ url_ask('EL_User.email') }" class="btn btn-info">Edit</a>
+    </h5>
+    <div class="card-body">
+      <div class="container-fluid">
+        <div class="row" style="align-items: center;">
+          <div class="col-auto">
+          Email 
+          </div>
+          <div class="col">
+            ${ EL_User.email }
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <br>
+  <div class="card">
+    <h5 class="card-header" style="border-bottom: none;">
+      Legal Matter
+    </h5>
+    <div class="card-body">
+      <div class="container-fluid">
+        % for EL_Q in EL_legalProblemSectionQs:
+        <div class="row" style="align-items: center;">
+          <div class="col-auto">
+            ${ EL_Q['question'] } 
+          </div>
+          <div class="col">
+            ${ value(EL_Q['variable_name']) }
+          </div>
+          <div class="col-2">
+            <a href="${ url_ask(EL_Q['variable_name']) }" class="btn btn-info">Edit</a>
+          </div>
+        </div>
+        % if loop.index > 0:
+        <hr>
+        % endif
+        % endfor
+      </div>
+    </div>
+  </div>
+  <br>
 field: EL_userFinalAction
 buttons:
   - Submit: submit

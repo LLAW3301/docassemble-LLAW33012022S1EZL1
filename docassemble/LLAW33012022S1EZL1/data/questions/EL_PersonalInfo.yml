@@ -4,25 +4,44 @@ objects:
 ---
 code: |
   nav.set_section('personal')
+  ###
   # gather personal information 
+  ###
+  
+  # NOTE 1: the variable `EL_legalProblemSectionQs` is used to store all questions for
+  ## which user provided an answer in this section. This is going to be useful later
+  ## when programmatically generating tabels for the review screen and the docx 
+  ## template. It means that when changing/adding questions only this variable needs to
+  ## be updated, instead of manually updating multiple files. 
+  EL_PersonalInfoSectionQs = []
+  
+  # add personal information to the list of asked questions - see NOTE 1
+  EL_PersonalInfoSectionQs.append({"question": "Name", "variable_name": "EL_User.name"})
+  EL_PersonalInfoSectionQs.append({"question": "Date of Birth", "variable_name": "EL_User.birthdate"})
+  EL_PersonalInfoSectionQs.append({"question": "Gender", "variable_name": "EL_User.gender"})
+  #EL_PersonalInfoSectionQs.append({"question": "Occupation", "variable_name": "EL_User.occupation"})
+  #EL_PersonalInfoSectionQs.append({"question": "Address", "variable_name": "EL_User.address"})
+ 
   EL_User.name.first
-  EL_User.name.middle
   EL_User.name.last
   EL_User.birthdate
   EL_User.gender
+  EL_User.occupation
+  EL_User.address
   
+  nav.set_section('contact')
   # gather contact details
   EL_User.email
   EL_User.phone_number
   EL_User.PreferredContact
   
   # the variable below is used to tell docassemble to run this file
-  EL_PersonalInformation = True
+  EL_PersonalInfoContactDetailsSection = True
 ---
 question: Personal Information
 fields:
   - First Name: EL_User.name.first
-  - Middle Name: EL_User.name.middle
+  - Middle Name (Optional): EL_User.name.middle
     required: False
   - Last Name: EL_User.name.last
   - Date of Birth: EL_User.birthdate
@@ -33,6 +52,31 @@ fields:
       - Male: male
       - Female: female
       - Other: other
+validation code: |
+  EL_User.name.first = capitalize(EL_User.name.first)
+  EL_User.name.last = capitalize(EL_User.name.last)
+---
+question: Personal Information Cont.
+fields:
+  - Occupation (Optional): EL_User.occupation
+    required: False
+  - Address (Optional): EL_User.address.address
+    address autocomplete: True
+    required: False
+  - City: EL_User.address.city
+    required: False
+    js enable if: |
+      val("EL_User.address.address") != ""
+  - State: EL_User.address.state
+    required: False
+    js enable if: |
+      val("EL_User.address.address") != ""
+    code: |
+      states_list(country_code='AU')
+  - Postcode: EL_User.address.postal_code
+    js enable if: |
+      val("EL_User.address.address") != ""
+    required: False
 ---
 question: Contact Details
 fields:
@@ -41,6 +85,11 @@ fields:
   - Phone number: EL_User.phone_number
     minlength: 10
     maxlength: 10
+    validation messages:
+      maxlength: |
+        Phone number needs to be 10 digits.
+      minlength: |
+        Phone number needs to be 10 digits.
   - Preferred contact method: EL_User.PreferredContact
     input type: radio
     choices:

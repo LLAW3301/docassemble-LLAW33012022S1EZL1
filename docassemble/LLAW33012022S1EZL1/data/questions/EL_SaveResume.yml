@@ -1,0 +1,79 @@
+
+---
+event: EL_saveAndResume
+code: |
+  # this tells the single mandatory code block to show the 'save and resume' pathway when it re runs
+  EL_showSaveResumeScreen = True
+---
+code: |
+  ### this block is triggered by EL_saveResumeSection
+  
+  # hide the save and resume button at the save and resume screen
+  EL_showSaveResumeButton = False
+  # confirm that user does really want to save and understand that the would receive 
+  ## a link via email
+  if EL_userWantsToSave == "yes":
+    # if we do not have the email, ask
+    if not defined('EL_User.email'):
+      EL_tempEmail
+    else:
+      EL_tempEmail = EL_User.email
+    # send the link to user's email address 
+    if EL_sendResumeEmail: 
+      # no need to show the steps anymore
+      nav.hide()
+      # reset the save and resume functionality (so that user can save again when
+      ## resuming)
+      # 1. delete the value of these variables to allow user to save later in the 
+      ## interview even if they said no now (without this DA will not re-ask the 
+      ## question and will automatically prevent user from saving after the first 
+      ## time the question was asked)
+      undefine('EL_userWantsToSave', 'EL_sendResumeEmail', 'EL_sessionSaved')
+      ## 2. tell the single mandatory code block to continue the interview as normal
+      EL_showSaveResumeScreen = False
+      # show message when done
+      log("We sent the link to your email address. You can safely close the window now!", "info")          
+  else:
+    # reset the save and resume functionality (so that user can save again later 
+    ## in the session even if they did not want to save now)
+    # 1. delete the value of these variables to allow user to save later in the 
+    ## interview even if they said no now (without this DA will not re-ask the 
+    ## question and will automatically prevent user from saving after the first 
+    ## time the question was asked)
+    undefine('EL_userWantsToSave', 'EL_sendResumeEmail', 'EL_sessionSaved')
+    # 2. tell the single mandatory code block to continue the interview as normal
+    EL_showSaveResumeScreen = False
+    
+  # this is used to tell DA to run this code block when it encounters this variable
+  EL_saveResumeSection = True
+
+---
+code: |
+  # this is in a separate code block than above to prevent multiple emails being sent each time user refreshes the page - this ensure that email is sent only once
+  EL_resumeEmailSentOk = send_email(to=EL_tempEmail, template=EL_Template_ResumeEmail)
+  
+  EL_sendResumeEmail = True
+---
+template: EL_Template_ResumeEmail
+subject: |
+  Your answers have been saved
+content: |
+  Hi there!
+  
+  We have saved your answers for you. To resume, please [click here](${ interview_url() }).
+  
+  Kind regards,  
+  Ezra Legal
+---
+question: What is your email address?
+fields:
+  - no label: EL_tempEmail
+---
+question: Did you want to save and resume later?
+subquestion: |
+  You can save your answers and complete the form at a later time. To do so, we need to email you your custom session link.
+field: EL_userWantsToSave
+buttons:
+  - Yes, email me: yes
+  - No, complete now: no
+---

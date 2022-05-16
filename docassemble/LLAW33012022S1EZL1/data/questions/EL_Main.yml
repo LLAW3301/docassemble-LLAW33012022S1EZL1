@@ -1,26 +1,27 @@
 ---
 include:
- - EL_SecurityCheck.yml
- - EL_PersonalInfo.yml
- - EL_Review.yml
- - EL_SaveResume.yml
- - EL_LegalProblem.yml
- - EL_OtherIssues.yml
- - EL_Commercial.yml
- - EL_WillsEstates.yml
- - EL_ITandDataPrivacy.yml
- - EL_Taxation.yml
- - EL_FamilyLaw.yml
- - EL_BuyingSellingProperty.yml
- - EL_DisputeResolutionLitigation.yml
- - EL_BuildingConstructionInfrastructure.yml
- - EL_FishingFarmingAquaculture.yml
- - EL_SupportingDocumentation.yml
+  - EL_SaveResume.yml
+  - EL_SecurityCheck.yml
+  - EL_PersonalInfo.yml
+  - EL_Review.yml
+  - EL_LegalProblem.yml
+  - EL_OtherIssues.yml
+  - EL_Commercial.yml
+  - EL_WillsEstates.yml
+  - EL_ITandDataPrivacy.yml
+  - EL_Taxation.yml
+  - EL_FamilyLaw.yml
+  - EL_BuyingSellingProperty.yml
+  - EL_DisputeResolutionLitigation.yml
+  - EL_BuildingConstructionInfrastructure.yml
+  - EL_FishingFarmingAquaculture.yml
+  - EL_SupportingDocumentation.yml
 ---
 metadata:
   title: |
     Ezra Legal
   exit url: https://ezralegal.com.au/
+  date format: d MMMM yyyy
   error help: |
     We are sorry.
     An error has occurred.
@@ -34,7 +35,6 @@ features:
   disable analytics: True
   bootstrap theme: EL_custom_theme.css
   inverse navbar: True
-  # navigation back button: False
   javascript: 
     - ELC_JavaScript.js
     - ELC_nprogress.js
@@ -53,38 +53,89 @@ sections:
   - problem: Legal Problem
   - docs: Supporting Documents
   - personal: Personal Information
-  - submit: Review and Submit
+  - contact: Contact Details
+  - submit: Review and Submit  
+---
+default screen parts:
+  under: |
+    % if EL_showSaveResumeButton:
+    [Save and resume later](${ url_action('EL_saveAndResume') })
+    % endif
+---
+sets: EL_showSaveResumeButton
+code: |
+  # need to enable multi_user for 'save and resume' capability to work
+  multi_user = True
+  # save and resume screen is hidden initially
+  EL_showSaveResumeScreen = False
+  # save and resume button is hidden initially 
+  EL_showSaveResumeButton = False
 ---
 mandatory: True
 code: |
-  # the steps/sections on the side are initially hidden until user begins the process
+  # initially (for new sessions) don't show the save and resume button, until the user
+  ## at least passed the security check and answerd one key question (otherwise nothing
+  ## to save and user is as good as starting fresh). 
+  ## This works because the variable is initially undefined, but when the code block
+  ## re-runs (as it does numerous times during the interview process), the variable
+  ## will be defined and the value won't be reset - it preservers whatever was the 
+  ## last value as defined later in the process
+  EL_showSaveResumeButton
+  # delete the variable so user can save in the future as well (otherwise user 
+  ## has only one chance to save)
+  undefine('EL_saveResumeSection')
+  
+  # when the save and resume button is clicked, show the save and resume pathway
+  if EL_showSaveResumeScreen:
+    # the below variable will trigger the logic for 'save and resume' defined in
+    ## EL_SaveResume.yml
+    EL_saveResumeSection
+     
+  ###
+  # if running interview for the first time, returning from 'save and resume' screen,
+  # or resuming after saving, the following will run as normal. 
+  ###
+  
+  # the steps/sections on the side are initially hidden until user begins the 
+  ## interview process
   nav.hide()
   # show welcome (initial) screen and make sure user agrees to the Privacy Notice
   EL_Screen_Welcome
-  # show the steps now to inform user how many steps are roughly remaining
+  # show the steps now to inform user how many steps are remaining
   nav.unhide()
   # ask security question 
-  if not EL_SecurityCheckPassed: ### not human or run out of attempts (kick out robot)
-    EL_SecruityCheckFailedScreen
+  if not EL_SecurityCheckPassed: ### not human or run out of attempts
+    # Inform user to attempt again later
+    EL_Screen_SecruityCheckFailed
   else: ### user passed test so proceed with interview
+    # unhide the save and resume button
+    EL_showSaveResumeButton = True
     # ask user what area of law they need help with and ask questions accordingly
-    EL_LegalProblem
+    EL_LegalProblemSection
+    # the EL_LegalProblemSection variable is used to trigger a code block in a separate
+    ## file. The problem is that once it is defined, that file will not run again even
+    ## when a user changes an answer at the review screen - meaning the logic won't be
+    ## re-evaluated for conditional questions that may depend on the changed answer. By
+    ## undefining the variable it is as if the content in that file is unwrapped here.
+    undefine('EL_LegalProblemSection')
     # check if user has documents they want to upload and store them if so
-    EL_SupportingDocumentation
-    # collect personal and contact information
-    EL_PersonalInformation
-    # allow user to review and confirm answers for last time before submission
-    EL_Review 
+    EL_SupportingDocumentationSection
+    # collect personal information and contact details
+    EL_PersonalInfoContactDetailsSection
+    # allow user to review and confirm answers for last time before submission. The 
+    ## below file also contains the logic for submitting (inc. emailing interview) 
+    ## and canceling
+    EL_ReviewSection
 ---
 question: We are here to help!
 subquestion: |
-  This form offers a convenient way for you to tell us about your issue so we can help as soon as possible. 
+  If you have a legal matter or want legal advise, use this form to contact us and get effective help. 
   
-  Get started by clicking continue, and rest assured as using this form is free of charge. 
+  Rest assured, the initial assessment of your matter is free. 
   
   
   <br>
-  **By continuing you agree to the** <a href="#" data-toggle="modal" data-target="#PrivacyNoticeModal">
+  **By continuing, you agree to the** <a href="#" data-toggle="modal" data-target="#PrivacyNoticeModal">
     Privacy Notice.
   </a>
   <div class="modal fade" id="PrivacyNoticeModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
