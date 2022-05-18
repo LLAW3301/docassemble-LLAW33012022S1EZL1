@@ -1,15 +1,36 @@
 ---
-code: |
-  # Ask user to describe their issue in their own words
-  EL_ProblemDescription
-  
-  # set this to true for the compiled answer template (to conditionally control content and format of the word template)
-  EL_FamilyLaw = True
----
-question: Please describe your problem
-subquestion: |
-  Please tell us a bit about your issue
+question: Which of the following areas of Family Law does your matter relate to?
+subquestion: Please select all that apply
 fields:
- - no label: EL_ProblemDescription
-   input type: area
+  - no label: EL_FamilyLaw_Area
+    datatype: checkboxes
+    choices:
+      - "Children's Issues"
+      - Property Settlement
+      - Domestic Violence Order
+      - Divorce
+      - Child Safety
+      - Other 
+    none of the above: False
+  - Please specify: EL_FamilyLaw_OtherArea
+    js show if: |
+      val("EL_FamilyLaw_Area['Other']")
+---
+question: Have you already initiated court proceedings? or Are there any existing family court orders ?
+yesno: EL_FamilyLaw_courtProceedingsOrders
+---
+question: Do you have a case number?
+fields:
+  - no label: EL_FamilyLaw_hasCaseNumber
+    datatype: yesnoradio
+  - Case Number: EL_FamilyLaw_caseNumber
+    show if: EL_FamilyLaw_hasCaseNumber
+---
+question: Tell us more
+subquestion: |
+  If you have anything more you would like us to know, please type it in the box bellow.
+fields:
+  - no label: EL_FamilyLaw_tellsUsMore
+    required: False
+    input type: area
 ---

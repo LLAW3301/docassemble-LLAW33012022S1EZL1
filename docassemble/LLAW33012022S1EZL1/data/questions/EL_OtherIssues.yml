@@ -1,14 +1,9 @@
 ---
-code: |
-  # User selected other, but offer them a chance to contact us
-  EL_ProblemDescription
-  
-  # set this to true for the compiled answers template (we conditionally control content and format of the word template)
-  EL_OtherIssues = True
----
-question: We might be unable to help
+depends on:
+  - EL_AskWhatLegalProblem
+question: Please tell us more!
 subquestion: |
-  We might not cover your issue, but if you would like please describe your problem below. We will get back to you and advise about what help we can provide or direct you to suitable service. 
+  We want to know more about what happend and what legal help you are seeking. 
 fields:
  - no label: EL_ProblemDescription
    input type: area

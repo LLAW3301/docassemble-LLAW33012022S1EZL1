@@ -1,15 +1,51 @@
 ---
-code: |
-  # Ask user to describe their issue in their own words
-  EL_ProblemDescription
-  
-  # set this to true for the compiled answer template (to conditionally control content and format of the word template)
-  EL_WillsEstates = True
----
-question: Please describe your problem
+question: What area of Wills and Estates your matter concerns?
 subquestion: |
-  Please tell us a bit about your issue
+  Please select all that apply 
 fields:
- - no label: EL_ProblemDescription
+  - no label: EL_willsEstatesArea
+    datatype: checkboxes
+    choices:
+      - Estate Planning (Wills, Powers of Attorney, Advance Care Directives etc): Estate Planning
+      - Probate and/or Administration of an Estate: Probate and/or Administration of an Estate
+      - Estate Dispute: Estate Dispute
+    none of the above: False
+---
+question: Do you currently have any estate planning documents?
+subquestion: |
+  This includes documents such as Wills, Powers of Attorney, Advance Care Directives etc.
+yesno: EL_hasEstatePlanningDocs
+---
+question: What documents do you currently have or wish to review/update?
+fields:
+ - no label: EL_EstateDocsDescription
    input type: area
+---
+question: Do you know what estate planning documents you require?
+fields: 
+  - no label: EL_knowsWhatDocsNeeded
+    datatype: yesnoradio
+  - Documents (select one or more): EL_DocsNeeded
+    datatype: checkboxes
+    choices:
+      - Will
+      - Power of Attorney
+      - Advance Care Directive
+    none of the above: False
+    show if: EL_knowsWhatDocsNeeded
+---
+question: Who do you wish to appoint as your Executor/s in your Will?
+fields:
+  - Name: EL_executorName
+    js hide if: |
+      val("EL_userNotSureAboutExecutor")
+  - Relationship to you: EL_relationshipToUser
+    js hide if: |
+      val("EL_userNotSureAboutExecutor")
+  - note: |
+      <br>
+      OR
+  - I am not sure: EL_userNotSureAboutExecutor
+    datatype: yesno
+    required: False
 ---

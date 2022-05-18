@@ -1,15 +1,21 @@
 ---
-code: |
-  # Ask user to describe their issue in their own words
-  EL_ProblemDescription
-  
-  # set this to true for the compiled answer template (to conditionally control content and format of the word template)
-  EL_BuildingConstructionInfrastructure = True
----
-question: Please describe your problem
-subquestion: |
-  Please tell us a bit about your issue
+question: Who are you?
 fields:
- - no label: EL_ProblemDescription
-   input type: area
+  - no label: EL_BCI_userRole
+    datatype: radio
+    choices:
+      - Developer
+      - Investor
+      - Owner
+---
+question: Does your matter involve any contractual issues ?
+fields: 
+  - no label: EL_BCI_involvesContractualIssue
+    datatype: yesnoradio
+  - Issue type: EL_BCI_contractualIssueType
+    datatype: radio
+    choices:
+      - Contract Negotiations
+      - Contract Interpretation
+    show if: EL_BCI_involvesContractualIssue
 ---

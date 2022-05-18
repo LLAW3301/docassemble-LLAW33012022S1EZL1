@@ -1,15 +1,29 @@
 ---
-code: |
-  # Ask user to describe their issue in their own words
-  EL_ProblemDescription
-  
-  # set this to true for the compiled answer template (to conditionally control content and format of the word template)
-  EL_FishingFarmingAquaculture = True
----
-question: Please describe your problem
+question: What is your industry?
 subquestion: |
-  Please tell us a bit about your issue
+  Please select all that apply
 fields:
- - no label: EL_ProblemDescription
-   input type: area
+  - no label: EL_FFA_industry
+    datatype: checkboxes
+    choices:
+      - Farming
+      - Fishing 
+      - Aquaculture 
+    none of the above: False
+---
+mandatory: True
+question: What type of farm?
+subquestion: |
+  Please select all that apply
+fields:
+  - no label: EL_FFA_farmType
+    datatype: radio
+    choices:
+      - Hobby 
+      - Crop 
+      - Livestock 
+      - Other 
+  - Please specify: EL_FFA_farmTypeOther
+    js show if: |
+      val("EL_FFA_farmType") == "Other"
 ---

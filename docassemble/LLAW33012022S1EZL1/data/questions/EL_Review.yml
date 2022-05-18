@@ -8,11 +8,15 @@ code: |
     EL_sendEmails
     # hide navigation items on the side
     nav.hide()
+    # hide the save and resume button - no need to save any longer
+    EL_showSaveResumeButton = False 
     # show confirmation message
     EL_confirmSubmit  
   else:
     # hide navigation items on the side
     nav.hide()
+    # hide the save and resume button - no need to save as session was deleted
+    EL_showSaveResumeButton = False 
     # confirm to user that their answers have been deleted
     EL_confirmCancel
     
@@ -20,14 +24,17 @@ code: |
   EL_ReviewSection = True
 ---
 code: |
-  # the file containing all answers is assembled using a docx template and the attachement block below (EL_compiledAnswers).
-  # emails are constructed in their separate template blocks below (EL_Template_EzraEmail and EL_Template_UserEmail)
+  # the file containing all answers is assembled using a docx template and the
+  # attachement block below (EL_compiledAnswers).
+  # emails are constructed in their separate template blocks below 
+  # (EL_Template_EzraEmail and EL_Template_UserEmail)
   
-  # the attachements sent must include the compiled answers but should only include uploaded files if they exist
+  # the attachements sent must include the compiled answers but should only include
+  # uploaded files if they exist
   EL_emailAttachments = [EL_compiledAnswers]
   if EL_hasSupportingDocs:
     EL_emailAttachments.append(EL_supportingDocs)
-  # send emails to user and ezra, containing compiled answers and any attachments
+  # send emails to user and Ezra, containing compiled answers and any attachments
   EL_userEmailSentOk = send_email(to=EL_User, template=EL_Template_ClientEmail, attachments=[EL_compiledAnswers])
   # TODO: EL_EzraEmailSentOk = send_email(to=EL_ClientEmailAddress, template=EL_Template_EzraEmail, attachments=[EL_compiledAnswers])
   
@@ -38,10 +45,10 @@ subject: |
   New client request has been received!
 content: |
   ${ EL_User.name } needs your legal assistance
-  % if EL_AskLegalProblem == 'Other/Unsure':
+  % if EL_AskWhatLegalProblem == 'Other/Unsure':
     but ${ EL_User.pronoun_possessive('issue') } might not be covered by your practice areas.
   % else:
-    with ${ indefinite_article(EL_AskLegalProblem) } matter.
+    with ${ indefinite_article(EL_AskWhatLegalProblem) } matter.
   % endif
   
   For further details, please find attached ${ EL_User.pronoun_possessive('answers') }
@@ -58,13 +65,14 @@ subject: |
 content: |
   Dear ${ EL_User.salutation(with_name=True) },  
 
-  We wanted to let you know that we have received your query. We will be in touch shortly.  
-  For the meantime, please find attached a copy of what we have received. 
+  We wanted to let you know that we have received your enquiry and will be in touch shortly.  
+  
+  In the meantime, please find attached a copy of what we have received. 
   
   Should you have any question or concern, please do not hesitate to contact us on (08) 8231 6100 or via email at admin@ezralegal.com.au.
 
   Kind regards,  
-  Ezra Legal
+  Ezra Legal Team
 ---
 attachment:
   - name: Compiled Answers
@@ -76,6 +84,7 @@ attachment:
     valid formats:
     - pdf
 ---
+prevent going back: True
 question: Review & Submit
 subquestion: |
   Please check that your answers below are correct before submitting.
@@ -84,7 +93,7 @@ subquestion: |
   <div class="card">
     <h5 class="card-header" style="border-bottom: none;display: flex;align-items: center;justify-content: flex-start;">
       <span style="flex: 1;"> Personal Information </span>
-      <a href="${ url_ask('EL_User.name.first') }" class="btn btn-info">Edit</a>
+      <a href="${ url_ask(['EL_User.name.first', 'EL_User.occupation']) }" class="btn btn-info">Edit</a>
     </h5>
     <div class="card-body">
       <div class="container-fluid">
@@ -96,10 +105,8 @@ subquestion: |
           <div class="col-auto">
             ${ EL_Q['question'] } 
           </div>
-          <div class="col">
-            % if defined(EL_Q['variable_name']):
-            ${ value(EL_Q['variable_name']) }
-            % endif
+          <div class="col" style="font-weight: bold;">
+            ${ showifdef(EL_Q['variable_name']) }
           </div>
         </div>
         % endfor
@@ -115,14 +122,21 @@ subquestion: |
     </h5>
     <div class="card-body">
       <div class="container-fluid">
+        % for EL_Q in EL_contactDetailsSectionQs:
+        % if loop.index > 0:
+        <hr>
+        % endif
         <div class="row" style="align-items: center;">
           <div class="col-auto">
-          Email 
+            ${ EL_Q['question'] } 
           </div>
-          <div class="col">
-            ${ EL_User.email }
+          <div class="col" style="font-weight: bold;">
+            % if defined(EL_Q['variable_name']):
+            ${ value(EL_Q['variable_name']) }
+            % endif
           </div>
         </div>
+        % endfor
       </div>
     </div>
   </div>
@@ -135,20 +149,20 @@ subquestion: |
     <div class="card-body">
       <div class="container-fluid">
         % for EL_Q in EL_legalProblemSectionQs:
+        % if loop.index > 0:
+        <hr>
+        % endif
         <div class="row" style="align-items: center;">
           <div class="col-auto">
             ${ EL_Q['question'] } 
           </div>
-          <div class="col">
-            ${ value(EL_Q['variable_name']) }
+          <div class="col" style="font-weight: bold;">
+            ${ EL_Q['value'] if "value" in EL_Q else value(EL_Q['variable_name']) }
           </div>
           <div class="col-2">
-            <a href="${ url_ask(EL_Q['variable_name']) }" class="btn btn-info">Edit</a>
+            <a href="${ url_ask(EL_Q['edit_variable']) if "edit_variable" in EL_Q else url_ask(EL_Q['variable_name'])  }" class="btn btn-info">Edit</a>
           </div>
         </div>
-        % if loop.index > 0:
-        <hr>
-        % endif
         % endfor
       </div>
     </div>
@@ -170,7 +184,7 @@ post: |
   <br>
   <hr>
   <br>
-  * **For demonstration purposes only**, previews of the emails and assembled documents are shown below. (NOTE: if you entered a genuine email at the Contact Details page you should also recieve an email — as user not Ezra)
+  * **For demonstration purposes only**, previews of the email and assembled document are shown below. (NOTE: if you entered a genuine email at the Contact Details page you should also recieve an email — as user not Ezra)
   
   **Compiled Answers**
   
@@ -180,6 +194,12 @@ post: |
   **Email to Ezra**
   
   ${ EL_Template_EzraEmail.show() }
+  
+  
+  <br> 
+  **Email to user/applicant**
+  
+  ${ EL_Template_ClientEmail.show() }
   
 ---
 prevent going back: True

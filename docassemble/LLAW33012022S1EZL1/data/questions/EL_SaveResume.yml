@@ -1,4 +1,3 @@
-
 ---
 event: EL_saveAndResume
 code: |
@@ -16,8 +15,12 @@ code: |
     # if we do not have the email, ask
     if not defined('EL_User.email'):
       EL_tempEmail
+      # if no name yet, say "Hi there!" in the email.
+      EL_tempName = "there"
     else:
       EL_tempEmail = EL_User.email
+      # use the user's real name in the email
+      EL_tempName = EL_User.name.first
     # send the link to user's email address 
     if EL_sendResumeEmail: 
       # no need to show the steps anymore
@@ -32,7 +35,7 @@ code: |
       ## 2. tell the single mandatory code block to continue the interview as normal
       EL_showSaveResumeScreen = False
       # show message when done
-      log("We sent the link to your email address. You can safely close the window now!", "info")          
+      log("Your answers have been saved! You can safely close the window now and resume later using the link sent to your email address.", "info")   
   else:
     # reset the save and resume functionality (so that user can save again later 
     ## in the session even if they did not want to save now)
@@ -58,7 +61,7 @@ template: EL_Template_ResumeEmail
 subject: |
   Your answers have been saved
 content: |
-  Hi there!
+  Hi ${EL_tempName}!
   
   We have saved your answers for you. To resume, please [click here](${ interview_url() }).
   
@@ -71,9 +74,19 @@ fields:
 ---
 question: Did you want to save and resume later?
 subquestion: |
-  You can save your answers and complete the form at a later time. To do so, we need to email you your custom session link.
+  You can save your answers and complete the form at a later time. To do so, we need to email you your secret session link.
 field: EL_userWantsToSave
 buttons:
   - Yes, email me: yes
   - No, complete now: no
 ---
+prevent going back: True
+question: See you later!
+subquestion: |
+  We sent the link to your email address. 
+  
+  Have a good day!
+buttons:
+  - Done:
+      code: |
+        EL_Screen_SeeYouLater = True

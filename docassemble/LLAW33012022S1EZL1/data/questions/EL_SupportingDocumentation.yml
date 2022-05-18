@@ -1,13 +1,6 @@
 --- 
-code: |
-  nav.set_section('docs')
-  if EL_hasSupportingDocs:
-    EL_supportingDocs
-  # the below variable tells Docassemble to run this block/file
-  EL_SupportingDocumentationSection = True
----
 question: Supporting Documentation
-subquestion: Do you wish to submit any supporting documentation?
+subquestion: Do you wish to submit any supporting documentation for us to consider?
 yesno: EL_hasSupportingDocs
 ---
 question: Supporting Documentation

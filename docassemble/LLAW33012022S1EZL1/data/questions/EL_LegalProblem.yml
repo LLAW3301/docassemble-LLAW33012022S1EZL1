@@ -1,37 +1,11 @@
 ---
-code: |
-  # NOTE 1: the variable `EL_legalProblemSectionQs` is used to store all questions for
-  ## which user provided an answer in this section. This is going to be useful later
-  ## when programmatically generating tabels for the review screen and the docx 
-  ## template. It means that when changing/adding questions only this variable needs to
-  ## be updated, instead of manually updating multiple files. 
-  EL_legalProblemSectionQs = []
----
-code: |
-  # initialise this variable which stores asked questions to ensure consistency.
-  EL_legalProblemSectionQs
-  # set current step to 'Legal Problem'
-  nav.set_section('problem')
-  # add `EL_AskLegalProblem` to the list of asked questions - see NOTE 1 - (this should
-  ## happen before the question is asked). It only runs if the question is undefined
-  ## because DA re-runs this code block multible times which would append the same item
-  ## each time it runs. There should be only one and no duplicates
-  if not defined('EL_AskLegalProblem'):
-    EL_legalProblemSectionQs.append({"question": "Area", "variable_name": "EL_AskLegalProblem"})
-  # ask user what type of legal problem 
-  EL_AskLegalProblem
-  # now show the save and resume button as we have something to actually save
-  EL_showSaveResumeButton = True
-  # tell DA to run this code block when encountering `EL_LegalProblem`
-  EL_LegalProblemSection = True
----
 question: What is your matter about?
 subquestion: |
-  Please select an area that you think best fit your matter
-field: EL_AskLegalProblem
+  Please select an area that you think best covers your matter
+field: EL_AskWhatLegalProblem
 choices:
   - Commercial law
-  - Wills and Estate
+  - Wills and Estates
   - Family Law
   - Taxation
   - Dispute Resolution and Litigation

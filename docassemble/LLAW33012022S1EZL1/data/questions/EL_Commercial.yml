@@ -1,15 +1,16 @@
 ---
-code: |
-  # Ask user to describe their issue in their own words
-  EL_ProblemDescription
-  
-  # set this to true for the compiled answer template (to conditionally control content and format of the word template)
-  EL_Commercial = True
+question: Lets get to know your organisation
+fields: 
+  - Name: EL_orgName
+  - Brief Description: EL_orgDescription
+    input type: area
 ---
-question: Please describe your problem
+depends on:
+  - EL_AskWhatLegalProblem
+question: Please tell us more about your matter and/or issues!
 subquestion: |
-  Please tell us a bit about your issue
+  We want to know more about what happend and what legal help you are seeking. 
 fields:
- - no label: EL_ProblemDescription
+ - no label: EL_CommercialLawDescription
    input type: area
 ---

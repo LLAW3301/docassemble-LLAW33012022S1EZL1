@@ -1,15 +1,14 @@
 ---
-code: |
-  # Ask user to describe their issue in their own words
-  EL_ProblemDescription
-  
-  # set this to true for the compiled answer template (to conditionally control content and format of the word template)
-  EL_BuyingSellingProperty = True
----
-question: Please describe your problem
-subquestion: |
-  Please tell us a bit about your issue
+question: Area of concern
 fields:
- - no label: EL_ProblemDescription
-   input type: area
+  - Are you buying or selling: EL_BS_buyingOrSelling
+    datatype: radio
+    choices:
+      - Buying property
+      - Selling property 
+  - Property Type: EL_BS_propertyType
+    datatype: radio
+    choices:
+      - Land
+      - Business
 ---

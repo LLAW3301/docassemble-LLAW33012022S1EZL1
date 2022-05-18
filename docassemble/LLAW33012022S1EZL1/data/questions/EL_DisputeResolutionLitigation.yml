@@ -1,15 +1,31 @@
 ---
-code: |
-  # Ask user to describe their issue in their own words
-  EL_ProblemDescription
-  
-  # set this to true for the compiled answer template (to conditionally control content and format of the word template)
-  EL_DisputeResolutionLitigation = True
+question: Does your dispute regard a Contactual Dispute?
+yesno: EL_DR_isContractual
 ---
-question: Please describe your problem
-subquestion: |
-  Please tell us a bit about your issue
+question: Is it a trade practices dispute?
+yesno: EL_DR_isTradePractices
+---
+question: Is this a dispute between co-directors or business partners?
 fields:
- - no label: EL_ProblemDescription
-   input type: area
+  - no label: EL_DR_isBusiness
+    datatype: radio
+    choices:
+      - "Yes (co-director)"
+      - "Yes (business partner)"
+      - "No"
+---
+question: Please tell us what the dispute is about
+fields:
+  - no label: EL_DR_explainDispute
+    input type: area
+---
+question: Are there any other relevant details? 
+subquestion: |
+  Is there anything else you would like us to be aware of regarding the matter?
+fields: 
+  - no label: EL_DR_moreDetailsProvided
+    datatype: yesnoradio
+  - Please specify:  EL_DR_moreDetails
+    input type: area
+    show if: EL_DR_moreDetailsProvided
 ---
