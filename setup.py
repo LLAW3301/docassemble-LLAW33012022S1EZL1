@@ -45,7 +45,7 @@ def find_package_data(where='.', package='', exclude=standard_exclude, exclude_d
 setup(name='docassemble.LLAW33012022S1EZL1',
       version='0.0.1',
       description=('A client intake app for Ezra Legal'),
-      long_description='# docassemble.LLAW33012022S1EZL1\r\n\r\nA client intake app for Ezra Legal\r\n\r\n## Author\r\n\r\nSirage Tarakji (tara0044@flinders.edu.au)\r\n\r\n',
+      long_description='# EL1 – Client Intake App\r\n\r\n> A smart client intake app for Ezra Legal\r\n\r\n## About\r\n\r\nThis web application streamlines the initial intake process for the legal firm Ezra Legal and their clients. Ezra is able to obtain vital preliminary information and documents prior to the initial face-to-face meeting, and their clients have access to a modern, highly accessible web app that intelligently guides them through questions (in plain and familiar language) to provide information required for identifying the legal issue and providing effective services. \r\n\r\n## Authors\r\n\r\nSirage Tarakji (Lead Developer) - (tara0044@flinders.edu.au)\r\nAislin Gawler\r\nAleyna Aydin\r\nJaskirat Singh\r\nMadeleine Charles\r\nTyson Seedsman\r\n\r\n',
       long_description_content_type='text/markdown',
       author='Sirage Tarakji',
       author_email='tara0044@flinders.edu.au',

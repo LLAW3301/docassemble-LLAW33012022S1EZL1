@@ -83,8 +83,17 @@ $(document).on('daPageLoad', function () {
 
   // replace footer with custom one
   $('footer.dafooter').replaceWith(
-    `<footer class="ELC-footer bg-dark text-light"> 
-      <div class="row">
+    `<footer class="ELC-footer"> 
+      <div style="display: flex;  align-items: center; flex-direction: row-reverse;margin-bottom: 14px;">
+        <div style="margin: 5px 10px;"><img src="https://staff.flinders.edu.au/etc.clientlibs/flinders/clientlibs/clientlib-site/resources/images/flinderuni_main_logo_black.png" height="40">
+        </div>
+        <div style="margin: 5px; text-align: right">
+          <cite><small><i>
+            Developed by Flinders University in collaboration with Ezra Legal
+          </i></small></cite>
+        </div>
+      </div>
+      <div class="row bg-dark text-light">
         <div class="container pt-4 pb-4 text-center">
         <div>
         Liability limited by a scheme approved under professional standards legislation.

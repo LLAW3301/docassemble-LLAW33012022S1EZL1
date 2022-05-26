@@ -2,8 +2,7 @@
 imports:
   - random
 ---
-prevent going back: True
-question: Security Check
+question: Security Challenge
 subquestion: |
   <aside id="ELC_questionControls">
     % if ELC_SC_AttemptsRemaining != ELC_SC_attemptsAllowed:

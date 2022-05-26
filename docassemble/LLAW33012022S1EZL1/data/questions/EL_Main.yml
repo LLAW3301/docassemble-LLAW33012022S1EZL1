@@ -19,8 +19,15 @@ include:
 ---
 metadata:
   title: |
-    Ezra Legal
+    Ezra Legal | Client Intake Form
   exit url: https://ezralegal.com.au/
+  authors:
+    - name: Sirage Tarakji
+    - name: Aislin Gawler
+    - name: Aleyna Aydin
+    - name: Jaskirat Singh
+    - name: Madeleine Charles
+    - name: Tyson Seedsman
   date format: d MMMM yyyy
   error help: |
     We are sorry.
@@ -28,13 +35,13 @@ metadata:
     Please [contact us](https://ezralegal.com.au/contact-us/).
 ---
 features:
-  navigation: True
-  labels above fields: True
-  # debug: False
+  debug: False
   hide standard menu: True
   disable analytics: True
-  bootstrap theme: EL_custom_theme.css
+  navigation: True
+  labels above fields: True
   inverse navbar: True
+  bootstrap theme: EL_custom_theme.css
   javascript: 
     - ELC_JavaScript.js
     - ELC_nprogress.js
@@ -64,7 +71,8 @@ default screen parts:
 ---
 sets: EL_showSaveResumeButton
 code: |
-  # need to enable multi_user for 'save and resume' capability to work
+  # need to enable `multi_user` for 'save and resume' capability to work. The trade
+  # off is that answers will not be encrypted when stored on the server - see https://docassemble.org/docs/security.html#sessionkeys
   multi_user = True
   # save and resume screen is hidden initially
   EL_showSaveResumeScreen = False
@@ -73,9 +81,15 @@ code: |
 ---
 mandatory: True
 code: |
+  # disable access to variables via browser console and `/vars?i=...` page. This is an
+  # important security measure to prevent unauthorised access to interview answers.
+  # see https://docassemble.org/docs/functions.html#js_get_interview_variables and
+  # https://docassemble.org/docs/security.html#multiuser
+  set_status(variable_access=False)
+  
   # initially (for new sessions) don't show the save and resume button, until the user
-  ## at least passed the security check and answerd one key question (otherwise nothing
-  ## to save and user is as good as starting fresh). 
+  ## at least passed the security check and answerd one key question (otherwise
+  ## there is nothing to save and user is as good as starting fresh). 
   ## This works because the variable is initially undefined, but when the code block
   ## re-runs (as it does numerous times during the interview process), the variable
   ## will be defined and the value won't be reset - it preservers whatever was the 
@@ -125,9 +139,13 @@ code: |
     # set current step to 'Legal Problem'
     nav.set_section('problem')
     # add `EL_AskWhatLegalProblem` to the list of asked questions - see NOTE 1
-    EL_legalProblemSectionQs.append({"question": "Legal Area", "variable_name": "EL_AskWhatLegalProblem"})
-    # ask user what area of law their problem relates to
+    EL_legalProblemSectionQs.append({"question": "What help do you require?", "variable_name": "EL_AskWhatLegalProblem"})
+    # ask user what there matter is relating to
     EL_AskWhatLegalProblem
+    
+    # now show the save and resume button as we have something to actually save
+    EL_showSaveResumeButton = True 
+    
     
     # depending on the selected area show different questions
     ########## Commercial Law ###########
@@ -386,8 +404,6 @@ code: |
       EL_legalProblemSectionQs.append({"question": "Description", "variable_name": "EL_ProblemDescription"})
       EL_ProblemDescription
     
-    # now show the save and resume button as we have something to actually save
-    EL_showSaveResumeButton = True 
     
     #### Legal Problem Section END ####
     ###################################
@@ -455,7 +471,7 @@ code: |
 ---
 question: We are here to help!
 subquestion: |
-  If you have a legal matter or want legal advise, use this form to contact us and get effective help. 
+  If you have a legal matter or want legal advice, use this form to contact us and get effective help.  
   
   Rest assured, the initial assessment of your matter is free. 
   

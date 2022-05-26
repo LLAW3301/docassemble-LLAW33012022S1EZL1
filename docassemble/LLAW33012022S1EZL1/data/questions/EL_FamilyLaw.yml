@@ -28,7 +28,7 @@ fields:
 ---
 question: Tell us more
 subquestion: |
-  If you have anything more you would like us to know, please type it in the box bellow.
+  If you have anything more you would like us to know, please type it in the box below.
 fields:
   - no label: EL_FamilyLaw_tellsUsMore
     required: False
