@@ -8,10 +8,10 @@ This web application streamlines the initial intake process for the legal firm E
 
 ## Authors
 
-Sirage Tarakji (Lead Developer) - (tara0044@flinders.edu.au)
-Aislin Gawler
-Aleyna Aydin
-Jaskirat Singh
-Madeleine Charles
-Tyson Seedsman
+* Sirage Tarakji (Lead Developer) - (tara0044@flinders.edu.au)
+* Aislin Gawler
+* Aleyna Aydin
+* Jaskirat Singh
+* Madeleine Charles
+* Tyson Seedsman
 
