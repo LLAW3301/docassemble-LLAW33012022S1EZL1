@@ -47,12 +47,7 @@ template: EL_Template_EzraEmail
 subject: |
   New client request has been received!
 content: |
-  ${ EL_User.name } needs your legal assistance
-  % if EL_AskWhatLegalProblem == 'Other/Unsure':
-    but ${ EL_User.pronoun_possessive('issue') } might not be covered by your practice areas.
-  % else:
-    with ${ indefinite_article(EL_AskWhatLegalProblem) } matter.
-  % endif
+  ${ EL_User.name } needs your legal assistance.
   
   For further details, please find attached 
   % if EL_hasSupportingDocs: 
