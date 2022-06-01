@@ -174,7 +174,7 @@ code: |
         # add question to the list of asked questions - see NOTE 1
         EL_legalProblemSectionQs.append({ "question": "What is your industry?", "variable_name": "EL_C_ContractArea", "value": EL_FFA_industry.true_values()})
       
-      elif EL_DRL_LitigationArea == "Information Technology and Data Privacy": 
+      elif EL_DRL_LitigationArea == "Information Technology or Data Privacy": 
         # ask if matter is about data breaches
         EL_IT_isDataBreach
         # add question to the list of asked questions - see NOTE 1
@@ -200,6 +200,13 @@ code: |
       # add question to the list of asked questions - see NOTE 1
       ## if user did not select a predefined value show their description
       EL_legalProblemSectionQs.append({ "question": "What area does the contract concern?", "variable_name": "EL_C_ContractArea", "value": EL_C_ContractArea if EL_C_ContractArea != "Something else" else EL_C_userDescriptionOfContractArea })
+      # if user selected IT or Data privacy
+      if EL_C_ContractArea == "Information Technology or Data Privacy": 
+        # ask if matter is about data breaches
+        EL_IT_isDataBreach
+        # add question to the list of asked questions - see NOTE 1
+        EL_legalProblemSectionQs.append({"question": "Does the matter concern a data breach?", "variable_name": "EL_IT_isDataBreach", "value": yesno(EL_IT_isDataBreach) })
+        
       # ask what sort of help needed ie writing or understanding a contract 
       EL_C_WorkNeeded
       # add question to the list of asked questions - see NOTE 1
