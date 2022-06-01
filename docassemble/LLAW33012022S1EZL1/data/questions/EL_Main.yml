@@ -231,6 +231,9 @@ code: |
     # check if user has documents they want to upload and store them if so
     if EL_hasSupportingDocs:
       EL_supportingDocs
+      # obtain caption for each attachment 
+      for doc in EL_supportingDocs: 
+        doc.caption
     #### Supporting Documentation Section END ####
     ##############################################
     

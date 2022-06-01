@@ -8,3 +8,10 @@ fields:
     datatype: files
     show if: EL_hasSupportingDocs
 ---
+question: What is the caption for this file "${ EL_supportingDocs[i].filename }"?
+subquestion: |
+  Please briefly describe what this file contains
+fields:
+  - no label: EL_supportingDocs[i].caption
+    input type: area
+---

@@ -151,7 +151,7 @@ subquestion: |
         <hr>
         % endif
         <div class="row" style="align-items: center;">
-          <div class="col-auto" style="font-weight: bold;">
+          <div class="col-4" style="font-weight: bold;">
             ${ EL_Q['question'] } 
           </div>
           <div class="col" >
@@ -175,16 +175,30 @@ subquestion: |
     <div class="card-body">
       <div class="container-fluid">
         % if EL_hasSupportingDocs:
+          <div class="row" style="align-items: center;font-weight: bold;">
+            <div class="col-2">
+              #
+            </div>
+            <div class="col-4">
+              Filename
+            </div>
+            <div class="col-5">
+              Caption
+            </div>
+          </div>
           % for doc in EL_supportingDocs:
             % if loop.index > 0:
               <hr>
             % endif
             <div class="row" style="align-items: center;">
-              <div class="col-auto">
+              <div class="col-2">
                 ${ loop.index } 
               </div>
-              <div class="col">
+              <div class="col-4">
                 ${ doc.filename }
+              </div>
+              <div class="col-5">
+                ${ doc.caption }
               </div>
             </div>
           % endfor
