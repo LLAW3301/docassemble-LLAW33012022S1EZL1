@@ -1,10 +1,12 @@
 ---
 depends on:
   - EL_AskWhatLegalProblem
-question: Please tell us more!
+question: We may not be able to help
 subquestion: |
-  We want to know more about what happend and what legal help you are seeking. 
-fields:
- - no label: EL_ProblemDescription
-   input type: area
+  Unfortunately, we do not cover ${ EL_OutofScopeArea }. However, if you continue, we may be able to refer you to someone who can help. 
+buttons:
+  - Continue:
+      code: |
+        EL_OutofScope = True
+  - Leave: exit
 ---

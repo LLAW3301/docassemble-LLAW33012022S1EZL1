@@ -1,31 +1,47 @@
 ---
-question: Does your dispute regard a Contactual Dispute?
-yesno: EL_DR_isContractual
----
-question: Is it a trade practices dispute?
-yesno: EL_DR_isTradePractices
----
-question: Is this a dispute between co-directors or business partners?
-fields:
-  - no label: EL_DR_isBusiness
-    datatype: radio
-    choices:
-      - "Yes (co-director)"
-      - "Yes (business partner)"
-      - "No"
----
-question: Please tell us what the dispute is about
-fields:
-  - no label: EL_DR_explainDispute
-    input type: area
----
-question: Are there any other relevant details? 
+question: What area does the matter relate to?
 subquestion: |
-  Is there anything else you would like us to be aware of regarding the matter?
+  Please select one of the following:
 fields: 
-  - no label: EL_DR_moreDetailsProvided
-    datatype: yesnoradio
-  - Please specify:  EL_DR_moreDetails
+  - no label: EL_DRL_LitigationArea
+    datatype: radio
+    default: Breach of Contract
+    choices:
+      - Taxation
+      - Breach of Contract
+      - Information Technology or Data Privacy
+      - Building, Construction, or Infrastucture
+      - Farming, Fishing, or Aquaculture
+      - Something else
+  - "Please specify:": EL_DRL_userDescriptionOfArea
     input type: area
-    show if: EL_DR_moreDetailsProvided
+    show if: 
+      variable: EL_DRL_LitigationArea
+      is: Something else
+---
+depends on:
+  - EL_AskWhatLegalProblem
+if: |
+  EL_AskWhatLegalProblem == "I am being sued"
+question: Please tell us why you are being sued
+subquestion: |
+  Please also indicate who the other party is.
+fields:
+  - no label: EL_DRL_LitigationReason
+    input type: area
+    default: |
+      My employer wants to sue me because I let my mate enter the premises and he caused some damage.
+---
+depends on:
+  - EL_AskWhatLegalProblem
+if: |
+  EL_AskWhatLegalProblem == "I want to sue someone"
+question: Please tell us why you want to sue the other party
+subquestion: |
+  Please also indicate who the other party is.
+fields:
+  - no label: EL_DRL_LitigationReason
+    input type: area
+    default: |
+      I want to sue my employee because he caused an unrepairable damage to an expensive machine.
 ---

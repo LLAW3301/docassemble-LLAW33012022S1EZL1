@@ -5,13 +5,18 @@ objects:
 question: Personal Information
 fields:
   - First Name: EL_User.name.first
+    default: John
   - Middle Name (Optional): EL_User.name.middle
     required: False
   - Last Name: EL_User.name.last
+    default: Smith
   - Date of Birth: EL_User.birthdate
     datatype: date
+    default: |
+      ${ today().minus(years=30) }
   - Gender: EL_User.gender
     input type: radio
+    default: male
     choices:
       - Male: male
       - Female: female
@@ -19,11 +24,6 @@ fields:
 validation code: |
   EL_User.name.first = capitalize(EL_User.name.first)
   EL_User.name.last = capitalize(EL_User.name.last)
-script: |
-  <script>
-  $('#EL_NextBtn').text('Skip')
-  $('#daform').on('input', (e) => { if (e.target.value != '') {$('#EL_NextBtn').text('Next')}})
-  </script>
 ---
 question: Personal Information Cont.
 fields:
@@ -46,27 +46,33 @@ fields:
     js enable if: |
       val("EL_User.address.address") != ""
     required: False
+script: |
+  <script>
+  $('#EL_NextBtn').text('Skip')
+  $('#daform').on('input', (e) => { if (e.target.value != '') {$('#EL_NextBtn').text('Next')}})
+  </script>
 ---
 question: Contact Details
 fields:
   - Email address: EL_User.email
     datatype: email
+    default: tara0044@flinders.edu.au 
   - Phone number: EL_User.phone_number
+    default: "0412345678"
     minlength: 10
     maxlength: 10
     validation messages:
       maxlength: |
-        Phone number needs to be 10 digits.
+        Phone number needs to be exactly 10 digits.
       minlength: |
-        Phone number needs to be 10 digits.
+        Phone number needs to be exactly 10 digits.
   - Preferred contact method: EL_User.PreferredContact
     input type: radio
+    default: Email
     choices:
       - Phone
       - Email
 validation code: |
   if not phone_number_is_valid(EL_User.phone_number, country='AU'):
     validation_error('Please enter a phone number valid for Australia.', field='EL_User.phone_number')
-  else:
-    EL_User.phone_number = phone_number_formatted(EL_User.phone_number, country='AU')
 ---  

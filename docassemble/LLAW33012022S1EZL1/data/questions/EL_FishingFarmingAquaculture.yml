@@ -11,18 +11,3 @@ fields:
       - Aquaculture 
     none of the above: False
 ---
-question: What type of farm?
-subquestion: |
-  Please select all that apply
-fields:
-  - no label: EL_FFA_farmType
-    datatype: radio
-    choices:
-      - Hobby 
-      - Crop 
-      - Livestock 
-      - Other 
-  - Please specify: EL_FFA_farmTypeOther
-    js show if: |
-      val("EL_FFA_farmType") == "Other"
----

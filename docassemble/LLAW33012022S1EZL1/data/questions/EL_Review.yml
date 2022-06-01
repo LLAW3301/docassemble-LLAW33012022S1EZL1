@@ -36,7 +36,10 @@ code: |
     EL_emailAttachments.append(EL_supportingDocs)
   # send emails to user and Ezra, containing compiled answers and any attachments
   EL_userEmailSentOk = send_email(to=EL_User, template=EL_Template_ClientEmail, attachments=[EL_compiledAnswers])
-  # TODO: EL_EzraEmailSentOk = send_email(to=EL_ClientEmailAddress, template=EL_Template_EzraEmail, attachments=[EL_compiledAnswers])
+  # activate the following two lines of code to send email to Ezra. It is currently 
+  # disabled to avoid causing inconvenience when testing or demonstrating the app.
+  # EL_ClientEmailAddress = "admin@ezralegal.com.au"
+  # EL_EzraEmailSentOk = send_email(to=EL_ClientEmailAddress, template=EL_Template_EzraEmail, attachments=[EL_compiledAnswers])
   
   EL_sendEmails = True
 ---
@@ -51,13 +54,15 @@ content: |
     with ${ indefinite_article(EL_AskWhatLegalProblem) } matter.
   % endif
   
-  For further details, please find attached ${ EL_User.pronoun_possessive('answers') }
+  For further details, please find attached 
   % if EL_hasSupportingDocs: 
-  and the supporting documents ${ EL_User.pronoun_subjective() } uploaded 
+  ${ EL_User.pronoun_possessive('answers') } and the supporting documents ${ EL_User.pronoun_subjective() } uploaded.
+  % else:
+  ${ EL_User.pronoun_possessive('answers') }.
   % endif
-  .
   
-  Regards
+  Regards,  
+  Ezra Legal App
 ---
 template: EL_Template_ClientEmail
 subject: |
@@ -87,7 +92,7 @@ attachment:
 prevent going back: True
 question: Review & Submit
 subquestion: |
-  Please check that your answers below are correct before submitting.
+  Please check that your answers below are all correct before sending your enquiry.
   
   <br>
   <div class="card">
@@ -102,11 +107,11 @@ subquestion: |
         <hr>
         % endif
         <div class="row" style="align-items: center;">
-          <div class="col-auto">
+          <div class="col-auto" style="font-weight: bold;">
             ${ EL_Q['question'] } 
           </div>
-          <div class="col" style="font-weight: bold;">
-            ${ showifdef(EL_Q['variable_name']) }
+          <div class="col">
+            ${ EL_Q['value'] if "value" in EL_Q else value(EL_Q['variable_name']) }
           </div>
         </div>
         % endfor
@@ -127,13 +132,11 @@ subquestion: |
         <hr>
         % endif
         <div class="row" style="align-items: center;">
-          <div class="col-auto">
+          <div class="col-auto" style="font-weight: bold;">
             ${ EL_Q['question'] } 
           </div>
-          <div class="col" style="font-weight: bold;">
-            % if defined(EL_Q['variable_name']):
-            ${ value(EL_Q['variable_name']) }
-            % endif
+          <div class="col">
+            ${ EL_Q['value'] if "value" in EL_Q else value(EL_Q['variable_name']) }
           </div>
         </div>
         % endfor
@@ -153,10 +156,10 @@ subquestion: |
         <hr>
         % endif
         <div class="row" style="align-items: center;">
-          <div class="col-auto">
+          <div class="col-auto" style="font-weight: bold;">
             ${ EL_Q['question'] } 
           </div>
-          <div class="col" style="font-weight: bold;">
+          <div class="col" >
             ${ EL_Q['value'] if "value" in EL_Q else value(EL_Q['variable_name']) }
           </div>
           <div class="col-2">
@@ -167,48 +170,116 @@ subquestion: |
       </div>
     </div>
   </div>
+  
+  <br>
+  <div class="card">
+    <h5 class="card-header" style="border-bottom: none;display: flex;align-items: center;justify-content: flex-start;">
+      <span style="flex: 1;"> Supporting Documentation </span>
+      <a href="${ url_ask('EL_hasSupportingDocs') }" class="btn btn-info">Edit</a>
+    </h5>
+    <div class="card-body">
+      <div class="container-fluid">
+        % if EL_hasSupportingDocs:
+          % for doc in EL_supportingDocs:
+            % if loop.index > 0:
+              <hr>
+            % endif
+            <div class="row" style="align-items: center;">
+              <div class="col-auto">
+                ${ loop.index } 
+              </div>
+              <div class="col">
+                ${ doc.filename }
+              </div>
+            </div>
+          % endfor
+        % else:
+        <p>I have no relevant documents that I want to upload.</p>
+        % endif
+       
+      </div>
+    </div>
+  </div>
   <br>
 field: EL_userFinalAction
 buttons:
-  - Submit: submit
-  - Cancel: cancel
+  - Send enquiry: submit
+  - Cancel and exit: cancel
 ---
 prevent going back: True
 event: EL_confirmSubmit
-question: Thank you for your request
+question: Thank you for contacting us
 subquestion: |
-  We have received your enquiry and will get in touch as soon as possible. A confirmation has been sent to the email address you have provided.
+  We have received your enquiry and will get in touch as soon as possible. A confirmation email has been sent to your email address.
 buttons:
   - Return to homepage: exit
 post: |
   <br>
   <hr>
   <br>
-  * **For demonstration purposes only**, previews of the email and assembled document are shown below. (NOTE: if you entered a genuine email at the Contact Details page you should also recieve an email — as user not Ezra)
+  * **For demonstration purposes only**, previews of the emails and assembled document are <a href="#" data-toggle="modal" data-target="#PreviewsModal">here</a>. 
   
-  **Compiled Answers**
-  
-  ${ EL_compiledAnswers }
-  
-  <br> 
-  **Email to Ezra**
-  
-  ${ EL_Template_EzraEmail.show() }
-  
-  
-  <br> 
-  **Email to user/applicant**
-  
-  ${ EL_Template_ClientEmail.show() }
+  <div class="modal fade" id="PreviewsModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="PrivacyModalLongTitle">Previews</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="container-fluid">
+            <ul class="nav nav-tabs" id="myTab" role="tablist">
+              <li class="nav-item">
+                <a class="nav-link active" id="answers-tab" data-toggle="tab" href="#answers" role="tab" aria-controls="answers" aria-selected="true">Assembled Answers</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" id="emailEzra-tab" data-toggle="tab" href="#emailEzra" role="tab" aria-controls="emailEzra" aria-selected="false">Email to Ezra</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" id="emailUser-tab" data-toggle="tab" href="#emailUser" role="tab" aria-controls="emailUser" aria-selected="false">Email to end user</a>
+              </li>
+            </ul>
+            <div class="tab-content" id="myTabContent">
+              <div class="tab-pane fade show active" id="answers" role="tabpanel" aria-labelledby="answers-tab">
+                <p>This file contains all collated information and is sent to Ezra and the end user.</p>
+                ${ EL_compiledAnswers }
+              </div>
+              <div class="tab-pane fade" id="emailEzra" role="tabpanel" aria-labelledby="emailEzra-tab">
+                <br>
+                <div>
+                  <strong style="margin-right: 5px;">Subject: </strong> <span>${ EL_Template_EzraEmail.subject_as_html(trim=True) }</span>    
+                </div>
+                <br>
+                ${ EL_Template_EzraEmail.content_as_html() }
+              </div>
+              <div class="tab-pane fade" id="emailUser" role="tabpanel" aria-labelledby="emailUser-tab">
+                <br>
+                <div>
+                  <strong style="margin-right: 5px;">Subject: </strong> <span>${ EL_Template_ClientEmail.subject_as_html(trim=True) }</span>
+                </div>
+                <br>
+                ${ EL_Template_ClientEmail.content_as_html() }
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>  
   
 ---
 prevent going back: True
 event: EL_confirmCancel
 question: Answers deleted
 subquestion: |
-  We have deleted your answers 
+  We have deleted your answers
   % if EL_hasSupportingDocs: 
-  and all files you have uploaded 
+  and all files you have uploaded
   % endif
   .
 buttons:

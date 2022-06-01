@@ -43,9 +43,9 @@ def find_package_data(where='.', package='', exclude=standard_exclude, exclude_d
     return out
 
 setup(name='docassemble.LLAW33012022S1EZL1',
-      version='0.0.1',
+      version='0.9.0',
       description=('A client intake app for Ezra Legal'),
-      long_description='# EL1 – Client Intake App\r\n\r\n> A smart client intake app for Ezra Legal\r\n\r\n## About\r\n\r\nThis web application streamlines the initial intake process for the legal firm Ezra Legal and their clients. Ezra is able to obtain vital preliminary information and documents prior to the initial face-to-face meeting, and their clients have access to a modern, highly accessible web app that intelligently guides them through questions (in plain and familiar language) to provide information required for identifying the legal issue and providing effective services. \r\n\r\n## Authors\r\n\r\nSirage Tarakji (Lead Developer) - (tara0044@flinders.edu.au)\r\nAislin Gawler\r\nAleyna Aydin\r\nJaskirat Singh\r\nMadeleine Charles\r\nTyson Seedsman\r\n\r\n',
+      long_description='# EL1 – Client Intake App\r\n\r\n> **A smart client intake app for Ezra Legal**\r\n\r\n## About\r\n\r\nThis web application streamlines the initial intake process for Ezra Legal (a law firm). Ezra is able to obtain important preliminary information, and documents, from potential clients prior to the initial face-to-face meeting. Clients will have access to a modern and user-friendly web application that guides them through required questions. The information obtained will assist Ezra in identifying the legal issues and more importantly maximising the utility of the initial interview to obtain clearer instructions and reduce the risks of miscommunication.\r\n\r\n## Key Features \r\n- User-friendly and interactive interface\r\n- mobile-friendly design\r\n- Review screen\r\n- Save-and-resume capability \r\n- User answers are automatically collated in a single file\r\n\r\n## Authors\r\n\r\n* Sirage Tarakji (Lead Developer) - (tara0044@flinders.edu.au)\r\n* Aislin Gawler\r\n* Aleyna Aydin\r\n* Jaskirat Singh\r\n* Madeleine Charles\r\n* Tyson Seedsman\r\n\r\n',
       long_description_content_type='text/markdown',
       author='Sirage Tarakji',
       author_email='tara0044@flinders.edu.au',

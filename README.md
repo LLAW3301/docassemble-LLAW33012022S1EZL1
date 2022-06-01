@@ -1,10 +1,17 @@
 # EL1 – Client Intake App
 
-> A smart client intake app for Ezra Legal
+> **A smart client intake app for Ezra Legal**
 
 ## About
 
-This web application streamlines the initial intake process for the legal firm Ezra Legal and their clients. Ezra is able to obtain vital preliminary information and documents prior to the initial face-to-face meeting, and their clients have access to a modern, highly accessible web app that intelligently guides them through questions (in plain and familiar language) to provide information required for identifying the legal issue and providing effective services. 
+This web application streamlines the initial intake process for Ezra Legal (a law firm). Ezra is able to obtain important preliminary information, and documents, from potential clients prior to the initial face-to-face meeting. Clients will have access to a modern and user-friendly web application that guides them through required questions. The information obtained will assist Ezra in identifying the legal issues and more importantly maximising the utility of the initial interview to obtain clearer instructions and reduce the risks of miscommunication.
+
+## Key Features 
+- User-friendly and interactive interface
+- mobile-friendly design
+- Review screen
+- Save-and-resume capability 
+- User answers are automatically collated in a single file
 
 ## Authors
 

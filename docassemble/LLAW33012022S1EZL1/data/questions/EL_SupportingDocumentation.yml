@@ -1,11 +1,10 @@
 --- 
 question: Supporting Documentation
-subquestion: Do you wish to submit any supporting documentation for us to consider?
-yesno: EL_hasSupportingDocs
----
-question: Supporting Documentation
-subquestion: Please upload the documents below
-fields:
-  - no label: EL_supportingDocs
+fields: 
+  - "Do you wish to upload any relevant documents for us to consider?": EL_hasSupportingDocs
+    datatype: yesnoradio
+    default: False
+  - "Please upload the documents below": EL_supportingDocs
     datatype: files
+    show if: EL_hasSupportingDocs
 ---

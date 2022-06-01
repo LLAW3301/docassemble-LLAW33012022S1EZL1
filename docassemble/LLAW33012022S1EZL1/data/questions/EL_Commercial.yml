@@ -1,16 +1,55 @@
 ---
-question: Lets get to know your organisation
-fields: 
-  - Name: EL_orgName
-  - Brief Description: EL_orgDescription
-    input type: area
----
-depends on:
-  - EL_AskWhatLegalProblem
-question: Please tell us more about your matter and/or issues!
+question: What area does the contract concern?
 subquestion: |
-  We want to know more about what happend and what legal help you are seeking. 
-fields:
- - no label: EL_CommercialLawDescription
-   input type: area
+  Please select one of the following:
+fields: 
+  - no label: EL_C_ContractArea
+    datatype: radio
+    default: Buying or Selling a Business
+    choices:
+      - Buying or Selling a Business
+      - Information Technology or Data Privacy
+      - Building, Construction or Infrastucture
+      - Farming, Fishing or Aquaculture
+      - Something else 
+  - "Please specify:": EL_C_userDescriptionOfContractArea
+    input type: area
+    show if: 
+      variable: EL_C_ContractArea
+      is: Something else
+  - "What sort of help do you require?": EL_C_WorkNeeded
+    datatype: radio
+    default: I need help writing a contract
+    choices:
+      - I need help understanding a contract
+      - I need help writing a contract
+      - Other
+  - "Please tell us how we may help:": EL_C_userDescriptionOfWorkNeeded
+    input type: area
+    show if: 
+      variable: EL_C_WorkNeeded
+      is: Other  
+---
+# show this question if user selected Breach of Contract at the Litigation screen 
+# (we already know it is a breach so no need to ask what sort of help is needed)
+if: |
+  EL_AskWhatLegalProblem == "I want to sue someone" or EL_AskWhatLegalProblem == "I am being sued"
+question: What area does the contract concern?
+subquestion: |
+  Please select one of the following:
+fields: 
+  - no label: EL_C_ContractArea
+    datatype: radio
+    default: Buying or Selling a Business
+    choices:
+      - Buying or Selling a Business
+      - Information Technology or Data Privacy
+      - Building, Construction or Infrastucture
+      - Farming, Fishing or Aquaculture
+      - Something else 
+  - "Please specify:": EL_C_userDescriptionOfContractArea
+    input type: area
+    show if: 
+      variable: EL_C_ContractArea
+      is: Something else
 ---

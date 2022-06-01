@@ -1,36 +1,6 @@
 ---
-question: Are you an IT business? 
-yesno: EL_IT_isITBusiness
----
-question: Does your matter regard seeking advice as an IT buisness?
-fields:
-  - no label: EL_IT_adviceForBusiness
-    datatype: yesnoradio
-  - Please specify: EL_IT_adviceForBusinessDetails
-    input type: area
-    show if: EL_IT_adviceForBusiness
----
-question: Are you doing business with an IT firm?
-yesno: EL_IT_withITFirm
----
-question: Does your matter regard Data Privacy?
-yesno: EL_IT_dataPrivacyMatter
----
-question: Does your matter concern any notifiable data breaches?
+question: Does the matter concern a data breach?
 fields:
   - no label: EL_IT_isDataBreach
     datatype: yesnoradio
-  - Please specify:  EL_IT_dataBreachDetails
-    input type: area
-    show if: EL_IT_isDataBreach
----
-question: Are there any other relevant details? 
-subquestion: |
-  Is there anything else you would like us to be aware of regarding the matter?
-fields: 
-  - no label: EL_IT_moreDetailsProvided
-    datatype: yesnoradio
-  - Please specify:  EL_IT_moreDetails
-    input type: area
-    show if: EL_IT_moreDetailsProvided
 ---

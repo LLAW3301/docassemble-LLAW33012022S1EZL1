@@ -1,17 +1,36 @@
 ---
-question: What is your matter about?
+question: How may we help you?
 subquestion: |
-  Please select an area that you think best covers your matter
-field: EL_AskWhatLegalProblem
-choices:
-  - Commercial law
-  - Wills and Estates
-  - Family Law
-  - Taxation
-  - Dispute Resolution and Litigation
-  - Information Technology and Data Privacy
-  - Building, Construction and Infrastructure
-  - Farming, Fishing and Aquaculture
-  - Buying or Selling Property 
-  - Other/Unsure
+  Please select one of the following:
+fields: 
+  - no label: EL_AskWhatLegalProblem
+    datatype: radio
+    default: I want to sue someone
+    choices:
+      - I want to sue someone
+      - I am being sued
+      - I want to sell my business
+      - I want to buy a business
+      - I want help with a contract
+      - I was hurt/injured
+      - I need help making a Will
+      - I need help disputing a Will
+      - I need help with a divorce property settlement 
+      - Something else 
+  - "Please specify:": EL_userDescriptionOfProblem
+    input type: area
+    show if: 
+      variable: EL_AskWhatLegalProblem
+      is: Something else
+---
+depends on:
+  - EL_AskWhatLegalProblem
+question: Additional Information 
+fields: 
+  - "Is there anything else you would like us to know?": EL_isThereAnythingElse
+    datatype: yesnoradio
+    default: False
+  - "What else would you like us to know?": EL_additionalInfo
+    input type: area
+    show if: EL_isThereAnythingElse
 ---

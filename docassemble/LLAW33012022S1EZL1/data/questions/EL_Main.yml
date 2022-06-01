@@ -9,11 +9,8 @@ include:
   - EL_Commercial.yml
   - EL_WillsEstates.yml
   - EL_ITandDataPrivacy.yml
-  - EL_Taxation.yml
-  - EL_FamilyLaw.yml
   - EL_BuyingSellingProperty.yml
   - EL_DisputeResolutionLitigation.yml
-  - EL_BuildingConstructionInfrastructure.yml
   - EL_FishingFarmingAquaculture.yml
   - EL_SupportingDocumentation.yml
 ---
@@ -56,8 +53,8 @@ metadata:
     <span id="EL_NextBtn">Next</span> <i class="fas fa-arrow-right ml-2"></i>
 ---
 sections:
-  - welcome: Security Check
-  - problem: Legal Problem
+  - welcome: Security Challenge
+  - problem: Legal Matter
   - docs: Supporting Documents
   - personal: Personal Information
   - contact: Contact Details
@@ -138,272 +135,92 @@ code: |
     EL_legalProblemSectionQs = []
     # set current step to 'Legal Problem'
     nav.set_section('problem')
-    # add `EL_AskWhatLegalProblem` to the list of asked questions - see NOTE 1
-    EL_legalProblemSectionQs.append({"question": "What help do you require?", "variable_name": "EL_AskWhatLegalProblem"})
-    # ask user what there matter is relating to
+    
+    # ask user what they need help with
     EL_AskWhatLegalProblem
+    
+    if EL_AskWhatLegalProblem != "Something else":
+      # if user selected a predefined valued display it as is in the review section
+      # add `EL_AskWhatLegalProblem` to the list of asked questions - see NOTE 1
+      EL_legalProblemSectionQs.append({"question": "What help do you require?", "variable_name": "EL_AskWhatLegalProblem"})
+    else:
+      # otherwise, show what the user wrote in the provided text box
+      # add `EL_AskWhatLegalProblem` to the list of asked questions - see NOTE 1
+      EL_legalProblemSectionQs.append({"question": "What help do you require?", "variable_name": "EL_AskWhatLegalProblem", "value": EL_userDescriptionOfProblem})
+    
     
     # now show the save and resume button as we have something to actually save
     EL_showSaveResumeButton = True 
     
     
-    # depending on the selected area show different questions
-    ########## Commercial Law ###########
-    if EL_AskWhatLegalProblem == "Commercial law":
-      # gather info about the organisation
-      EL_orgName
+    # depending on the selected area show different questions if needed      
+    ########## If Dispute Resolution and Litigation - I want to sue someone or I am being sued ##########
+    if EL_AskWhatLegalProblem == "I want to sue someone" or EL_AskWhatLegalProblem == "I am being sued":
+      # ask what area the litigation relates to
+      EL_DRL_LitigationArea
       # add question to the list of asked questions - see NOTE 1
-      EL_legalProblemSectionQs.append({"question": "Organisation Name", "variable_name": "EL_orgName"})
-      EL_orgDescription
-      # add question to the list of asked questions - see NOTE 1
-      EL_legalProblemSectionQs.append({"question": "Organisation Description", "variable_name": "EL_orgDescription"})
-      # get further details about the issues
-      EL_CommercialLawDescription
-      # add question to the list of asked questions - see NOTE 1
-      EL_legalProblemSectionQs.append({"question": "Problem Description", "variable_name": "EL_CommercialLawDescription"})
-      
-    ########## Wills and Estates ##########
-    elif EL_AskWhatLegalProblem == "Wills and Estates":
-      # ask what specific area they need help with
-      EL_willsEstatesArea
-      # add question to the list of asked questions - see NOTE 1
-      EL_legalProblemSectionQs.append({"question": "Wills and Estates Areas", "edit_variable": "EL_willsEstatesArea", "value": EL_willsEstatesArea.true_values() })
-      # ask estate planning questions if user selected that option
-      if EL_willsEstatesArea['Estate Planning']:
+      ## and if user selected something else show what they said
+      EL_legalProblemSectionQs.append({ "question": "What area does the matter relate to?", "variable_name": "EL_DRL_LitigationArea", "value": EL_DRL_LitigationArea if EL_DRL_LitigationArea != "Something else" else EL_DRL_userDescriptionOfArea})
+      # if user selected "breach of contract" ask about area of contract
+      if EL_DRL_LitigationArea == "Breach of Contract":
+        EL_C_ContractArea
         # add question to the list of asked questions - see NOTE 1
-        EL_legalProblemSectionQs.append({"question": "Has Estate Planning Documents", "variable_name": "EL_hasEstatePlanningDocs", "value": yesno(EL_hasEstatePlanningDocs)})
-        # ask if user has documents
-        if EL_hasEstatePlanningDocs:
-          # add question to the list of asked questions - see NOTE 1
-          EL_legalProblemSectionQs.append({"question": "Estate Planning Documents", "variable_name": "EL_EstateDocsDescription"})
-          # user has documents, ask what documents and what help they need with those
-          EL_EstateDocsDescription
-        else:
-          # user doesn't have documents, ask what documents they want
-          EL_knowsWhatDocsNeeded
-          
-          # user doesn't know what document they need
-          if not EL_knowsWhatDocsNeeded:
-            EL_DocsNeededUnknown = "I don't know"
-            # add question to the list of asked questions - see NOTE 1
-            EL_legalProblemSectionQs.append({"question": "Required Document/s", "variable_name": "EL_DocsNeededUnknown", "edit_variable": "EL_knowsWhatDocsNeeded"})
-          else:
-            # user knows what document they require, ask them to select
-            EL_DocsNeeded
-            # add question to the list of asked questions - see NOTE 1
-            EL_legalProblemSectionQs.append({"question": "Required Document/s", "variable_name": "EL_DocsNeeded", "edit_variable": "EL_knowsWhatDocsNeeded", "value": EL_DocsNeeded.true_values() })
-          # TODO: add more questions
-          # else:
-          #  # user knows what doc they need
-          #  if EL_DocsNeeded['Will']:
-          #    # user wants a will, ask about executor/s if user is not unsure
-          #    if not EL_userNotSureAboutExecutor:
-          #      # user did not click unsure, so they have a name
-          #      EL_executorName
-          #      # ask relationship to user
-          #      EL_relationshipToUser
-          #      # TODO: maybe make this a list and user can add more???
-          
-    ########## Family Law ##########
-    elif EL_AskWhatLegalProblem == "Family Law":
-      # add question to the list of asked questions - see NOTE 1
-      EL_legalProblemSectionQs.append({"question": "Need help with", "variable_name": "EL_FamilyLaw_Area", "value": EL_FamilyLaw_Area.true_values() })
-      # ask what specific area they need help with
-      EL_FamilyLaw_Area
-      # ask if there is court proceedings or orders currently ongoing
-      if EL_FamilyLaw_courtProceedingsOrders:
-        # ask to provide case number if exists
-        if EL_FamilyLaw_hasCaseNumber:
-          EL_FamilyLaw_caseNumber
-      # TODO: add more questions
-      # add question to the list of asked questions - see NOTE 1
-      EL_legalProblemSectionQs.append({"question": "More details", "variable_name": "EL_FamilyLaw_tellsUsMore", "value": EL_FamilyLaw_tellsUsMore if EL_FamilyLaw_tellsUsMore != '' else "N/A"})
-      EL_FamilyLaw_tellsUsMore
-      
-    ########## Taxation ##########
-    elif EL_AskWhatLegalProblem == "Taxation":
-      # add question to the list of asked questions - see NOTE 1
-      EL_legalProblemSectionQs.append({"question": "Business Related", "variable_name": "EL_Taxation_isBusiness"})
-      # ask if user is enquiring for a business or an personal matter
-      if EL_Taxation_isBusiness:
-        # add question to the list of asked questions - see NOTE 1
-        EL_legalProblemSectionQs.append({"question": "Business Type", "variable_name": "EL_Taxation_businessType"})
-        # user is business, ask type
-        EL_Taxation_businessType
-        if EL_Taxation_businessType == 'Other':
-          # user did not select any of the predefined types, ask user to specify
-          EL_Taxation_businessTypeOther
-          # add question to the list of asked questions - see NOTE 1
-          EL_legalProblemSectionQs.append({"question": "Other Type", "variable_name": "EL_Taxation_businessTypeOther"})
+        ## if user did not select a predefined value show their description
+        EL_legalProblemSectionQs.append({ "question": "What area does the contract concern?", "variable_name": "EL_C_ContractArea", "value": EL_C_ContractArea if EL_C_ContractArea != "Something else" else EL_C_userDescriptionOfContractArea })
         
-      # ask user what is their area of concern, for both bussiness and individual
-      EL_Taxation_concernArea
-      # add question to the list of asked questions - see NOTE 1
-      EL_legalProblemSectionQs.append({"question": "Area of Concern", "variable_name": "EL_Taxation_concernArea", "value": EL_Taxation_concernArea.true_values() })
-        
-      ########## Audit ##########
-      if EL_Taxation_concernArea['Audit/Intervention']:
-        # ask if contacted by ATO for an audit
-        EL_Taxation_AuditOccuring
+      elif EL_DRL_LitigationArea == "Farming, Fishing, or Aquaculture":
+        # ask what industry, farming, fishing, or Aquaculture
+        EL_FFA_industry
         # add question to the list of asked questions - see NOTE 1
-        EL_legalProblemSectionQs.append({"question": "Contacted by ATO for an audit", "variable_name": "EL_Taxation_AuditOccuring"})
-          
-        # add question to the list of asked questions - see NOTE 1
-        EL_legalProblemSectionQs.append({"question": "Auidted before", "variable_name": "EL_Taxation_AuditedBefore"})
-        # ask if audited previously 
-        if EL_Taxation_AuditedBefore:
-          # if yes, ask for year
-          EL_Taxation_previousAuditYear
-          # add question to the list of asked questions - see NOTE 1
-          EL_legalProblemSectionQs.append({"question": "Previous Audit Year", "variable_name": "EL_Taxation_previousAuditYear" })
-          
-      ########## GST ##########
-      if EL_Taxation_concernArea['GST']:
-        # what GST issue
-        EL_Taxation_GST_Area
-        # add question to the list of asked questions - see NOTE 1
-        EL_legalProblemSectionQs.append({"question": "GST Area", "variable_name": "EL_Taxation_GST_Area", "value": EL_Taxation_GST_Area.true_values() })
-        if EL_Taxation_GST_Area['Other']:
-          # if other, ask user to specify 
-          EL_Taxation_GST_areaOther
-          # add question to the list of asked questions - see NOTE 1
-          EL_legalProblemSectionQs.append({"question": "Other GST Area", "variable_name": "EL_Taxation_GST_areaOther"})
-
-      ########## Taxation - Other ##########
-      if EL_Taxation_concernArea['Other']:
-        # ask user what is their other area of concern
-        EL_Taxation_concernAreaOther
-        # add question to the list of asked questions - see NOTE 1
-        EL_legalProblemSectionQs.append({"question": "Other Concerns", "variable_name": "EL_Taxation_concernAreaOther"})
+        EL_legalProblemSectionQs.append({ "question": "What is your industry?", "variable_name": "EL_C_ContractArea", "value": EL_FFA_industry.true_values()})
       
-      ########## Taxation - ALL Areas ##########
-      # add question to the list of asked questions - see NOTE 1
-      EL_legalProblemSectionQs.append({"question": "Want to provide more details", "variable_name": "EL_Taxation_moreDetailsProvided", "value": yesno(EL_Taxation_moreDetailsProvided), "doc_question": "Client wants to provide more details?"})
-      # for all taxation areas ask user if they have additional info
-      if EL_Taxation_moreDetailsProvided:
-        # collect the additional info
-        EL_Taxation_moreDetails
+      elif EL_DRL_LitigationArea == "Information Technology and Data Privacy": 
+        # ask if matter is about data breaches
+        EL_IT_isDataBreach
         # add question to the list of asked questions - see NOTE 1
-        EL_legalProblemSectionQs.append({"question": "Additional details", "variable_name": "EL_Taxation_moreDetails"})
+        EL_legalProblemSectionQs.append({"question": "Does the matter concern a data breach?", "variable_name": "EL_IT_isDataBreach", "value": yesno(EL_IT_isDataBreach) })
       
+      # ask the reason of litigation ie why they are being sue or want to sue.
+      EL_DRL_LitigationReason
+      # add question to the list of asked questions - see NOTE 1
+      EL_legalProblemSectionQs.append({ "question": "Why do you want to sue them?" if EL_AskWhatLegalProblem == "I want to sue someone" else "Why are you being sued?", "variable_name": "EL_DRL_LitigationReason" })
+    
+    ########## If Buying or Selling Property - I want to sell my business or I want to buy a business ##########
+    elif EL_AskWhatLegalProblem == "I want to sell my business" or EL_AskWhatLegalProblem == "I want to buy a business":
+      # ask if user needs assistance with preparing or clarifying contract, if neither ask what they need
+      EL_BSP_wantsToPrepareOrClarifyContract
+      # add question to the list of asked questions - see NOTE 1
+      ## if user said no show "No - [user input]"
+      EL_legalProblemSectionQs.append({ "question": "Do you need help preparing or clarifying a contract?", "variable_name": "EL_BSP_wantsToPrepareOrClarifyContract", "value": EL_BSP_wantsToPrepareOrClarifyContract if EL_BSP_wantsToPrepareOrClarifyContract != "No, something else" else "No - " + EL_BSP_userDescriptionOfHelpNeeded })
+    
+    ########## If Commercial - I want help with a contract ##########
+    elif EL_AskWhatLegalProblem == "I want help with a contract":
+      # ask what area the contract relates to
+      EL_C_ContractArea
+      # add question to the list of asked questions - see NOTE 1
+      ## if user did not select a predefined value show their description
+      EL_legalProblemSectionQs.append({ "question": "What area does the contract concern?", "variable_name": "EL_C_ContractArea", "value": EL_C_ContractArea if EL_C_ContractArea != "Something else" else EL_C_userDescriptionOfContractArea })
+      # ask what sort of help needed ie writing or understanding a contract 
+      EL_C_WorkNeeded
+      # add question to the list of asked questions - see NOTE 1
+      ## if user did not select a predefined value show their description
+      EL_legalProblemSectionQs.append({ "question": "What sort of help do you require?", "variable_name": "EL_C_WorkNeeded", "value": EL_C_WorkNeeded if EL_C_WorkNeeded != "Other" else EL_C_userDescriptionOfWorkNeeded })
       
-    ########## Dispute Resolution and Litigation ##########
-    elif EL_AskWhatLegalProblem == "Dispute Resolution and Litigation":
-      # add question to the list of asked questions - see NOTE 1
-      EL_legalProblemSectionQs.append({"question": "Contractual Dispute", "variable_name": "EL_DR_isContractual", "value": yesno(EL_DR_isContractual) })
-      # ask if contractual dispute 
-      if not EL_DR_isContractual:
-        # not contractual, ask if trade practice
-        # add question to the list of asked questions - see NOTE 1
-        EL_legalProblemSectionQs.append({"question": "Trade Practices Dispute", "variable_name": "EL_DR_isTradePractices", "value": yesno(EL_DR_isTradePractices) })
-        if not EL_DR_isTradePractices:
-          # add question to the list of asked questions - see NOTE 1
-          EL_legalProblemSectionQs.append({"question": "Dispute with co-directors or business partners", "variable_name": "EL_DR_isBusiness" })
-          # not trade, ask if dispute between business partner or co-director
-          if EL_DR_isBusiness == "No":
-            # not business related, ask user to explain their dispute
-            EL_DR_explainDispute
-            # add question to the list of asked questions - see NOTE 1
-            EL_legalProblemSectionQs.append({"question": "Dispute details", "variable_name": "EL_DR_explainDispute" })
-      
-      ########## DR - General ##########
-      # add question to the list of asked questions - see NOTE 1
-      EL_legalProblemSectionQs.append({"question": "Want to provide more details", "variable_name": "EL_DR_moreDetailsProvided", "value": yesno(EL_DR_moreDetailsProvided), "doc_question": "Client wants to provide more details?"})
-      # for all taxation areas ask user if they have additional info
-      if EL_DR_moreDetailsProvided:
-        # collect the additional info
-        EL_DR_moreDetails
-        # add question to the list of asked questions - see NOTE 1
-        EL_legalProblemSectionQs.append({"question": "Additional details", "variable_name": "EL_DR_moreDetails"})
-        
-    ########## IT and Data Privacy ##########
-    elif EL_AskWhatLegalProblem == "Information Technology and Data Privacy":
-      # add question to the list of asked questions - see NOTE 1
-      EL_legalProblemSectionQs.append({"question": "IT Business", "variable_name": "EL_IT_isITBusiness", "value": yesno(EL_IT_isITBusiness) })
-      # ask if user is an IT business
-      if EL_IT_isITBusiness:
-        # user is IT Business, check if matter relates to advice as IT business
-        # add question to the list of asked questions - see NOTE 1
-        EL_legalProblemSectionQs.append({"question": "Seeking advice as an IT business", "variable_name": "EL_IT_adviceForBusiness", "value": yesno(EL_IT_adviceForBusiness) })
-        if EL_IT_adviceForBusiness: 
-          # ask user to specify
-          EL_IT_adviceForBusinessDetails
-          # add question to the list of asked questions - see NOTE 1
-          EL_legalProblemSectionQs.append({"question": "Details", "variable_name": "EL_IT_adviceForBusinessDetails" })
-      if not EL_IT_isITBusiness:
-        # not IT business, ask if user is dealing with an IT firm
-        EL_IT_withITFirm
-        # add question to the list of asked questions - see NOTE 1
-        EL_legalProblemSectionQs.append({"question": "Dealing with IT firm", "variable_name": "EL_IT_withITFirm", "value": yesno(EL_IT_withITFirm) })
-       
-      # add question to the list of asked questions - see NOTE 1
-      EL_legalProblemSectionQs.append({"question": "Data Privacy Matter", "variable_name": "EL_IT_dataPrivacyMatter", "value": yesno(EL_IT_dataPrivacyMatter) }) 
-      # ask if matter is re data privacy
-      if EL_IT_dataPrivacyMatter:
-        # it is related to data privacy
-        # add question to the list of asked questions - see NOTE 1
-        EL_legalProblemSectionQs.append({"question": "Matter relates to data breaches", "variable_name": "EL_IT_isDataBreach", "value": yesno(EL_IT_isDataBreach) })
-        # ask if issue is about data breaches
-        if EL_IT_isDataBreach:
-          # it true ask user to specify
-          EL_IT_dataBreachDetails
-          # add question to the list of asked questions - see NOTE 1
-          EL_legalProblemSectionQs.append({"question": "Issue description ", "variable_name": "EL_IT_dataBreachDetails" })
-        
+    ########## If Out-of-Scope Matter - I was hurt/injured ##########
+    elif EL_AskWhatLegalProblem == "I was hurt/injured":
+      # set area to "personal injury"
+      EL_OutofScopeArea = "personal injury"
+      # tell user we don't deal with this area of law, but we are happy for them to 
+      ## continue to send their enquiry, so we may be able to refer them to someone 
+      ## who can help. 
+      EL_OutofScope
     
-      ########## IT - General ##########
-      # add question to the list of asked questions - see NOTE 1
-      EL_legalProblemSectionQs.append({"question": "Want to provide more details", "variable_name": "EL_IT_moreDetailsProvided", "value": yesno(EL_IT_moreDetailsProvided), "doc_question": "Client wants to provide more details"})
-      # for all taxation areas ask user if they have additional info
-      if EL_IT_moreDetailsProvided:
-        # collect the additional info
-        EL_IT_moreDetails
-        # add question to the list of asked questions - see NOTE 1
-        EL_legalProblemSectionQs.append({"question": "Additional details", "variable_name": "EL_DR_moreDetails"})
-    
-    ########## Building ##########
-    elif EL_AskWhatLegalProblem == "Building, Construction and Infrastructure":
-      # ask who the user is in relation to the matter ie owner, developer, investor
-      EL_BCI_userRole
-      # add question to the list of asked questions - see NOTE 1
-      EL_legalProblemSectionQs.append({"question": "Role", "variable_name": "EL_BCI_userRole"})
-      # ask if matter invovles contractual issues
-      EL_BCI_involvesContractualIssue
-      # add question to the list of asked questions - see NOTE 1
-      EL_legalProblemSectionQs.append({"question": "Any contractual issues", "variable_name": "EL_BCI_involvesContractualIssue", "value": yesno(EL_BCI_involvesContractualIssue) })
-    
-    ########## Farming ##########
-    elif EL_AskWhatLegalProblem == "Farming, Fishing and Aquaculture":
-      # add question to the list of asked questions - see NOTE 1
-      EL_legalProblemSectionQs.append({"question": "Industry", "variable_name": "EL_FFA_industry", "value": EL_FFA_industry.true_values() })
-      # what industry
-      if EL_FFA_industry['Farming']:
-        # what type of farm
-        EL_FFA_farmType
-        # add question to the list of asked questions - see NOTE 1
-        EL_legalProblemSectionQs.append({"question": "Farm Type", "variable_name": "EL_FFA_farmType" })
-    
-    ########## Buying or Selling Property ##########
-    elif EL_AskWhatLegalProblem == "Buying or Selling Property":
-      # Buying or Selling, ask user to select
-      EL_BS_buyingOrSelling
-      # add question to the list of asked questions - see NOTE 1
-      EL_legalProblemSectionQs.append({"question": "Buying or Selling", "variable_name": "EL_BS_buyingOrSelling" })
-      # ask what type of property
-      EL_BS_propertyType
-      # add question to the list of asked questions - see NOTE 1
-      EL_legalProblemSectionQs.append({"question": "Property Type", "variable_name": "EL_BS_propertyType" })
-      
-      # ask user to describe issue
-      EL_ProblemDescription
-      # TODO: other questions?
-
-    ########## Other/Unsure ##########
-    else:
-      # add question to the list - see NOTE 1
-      EL_legalProblemSectionQs.append({"question": "Description", "variable_name": "EL_ProblemDescription"})
-      EL_ProblemDescription
-    
+    ########## ALL - see if user wants us to know about anything else ##########
+    EL_isThereAnythingElse
+    # if user has anything else they want to say, show it at the review screen 
+    ## and add it to the compiled answers document
+    # add question to the list of asked questions - see NOTE 1
+    EL_legalProblemSectionQs.append({"question": "Additional Information", "variable_name": "EL_isThereAnythingElse", "value": EL_additionalInfo if EL_isThereAnythingElse else "N/A" })
     
     #### Legal Problem Section END ####
     ###################################
@@ -451,7 +268,7 @@ code: |
   
     # add contact information to the list of asked questions - see NOTE 1
     EL_contactDetailsSectionQs.append({"question": "Email", "variable_name": "EL_User.email"})
-    EL_contactDetailsSectionQs.append({"question": "Phone Number", "variable_name": "EL_User.phone_number"})
+    EL_contactDetailsSectionQs.append({"question": "Phone Number", "variable_name": "EL_User.phone_number", "value": phone_number_formatted(EL_User.phone_number, country='AU')})
     EL_contactDetailsSectionQs.append({"question": "Preferred Contact Method", "variable_name": "EL_User.PreferredContact"})
 
     EL_User.email
@@ -468,6 +285,11 @@ code: |
     EL_ReviewSection
     #### Review and Submit Section END ####
     #######################################
+---
+template: EL_PrivacyNotice
+content: |
+  We collect personal information to assess your matter. All information will be securely stored, kept confidential, and only handled as allowed by the *Privacy Act 1988* (Cth).
+
 ---
 question: We are here to help!
 subquestion: |
@@ -490,7 +312,7 @@ subquestion: |
           </button>
         </div>
         <div class="modal-body">
-          We collect personal information to assess your matter. All information will be securely stored, kept confidential, and only handled as allowed by the <em>Privacy Act 1988</em> (Cth).
+          ${ EL_PrivacyNotice.content_as_html()}
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>

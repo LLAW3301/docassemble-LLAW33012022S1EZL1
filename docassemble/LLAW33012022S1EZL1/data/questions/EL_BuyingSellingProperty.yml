@@ -1,14 +1,15 @@
 ---
-question: Area of concern
-fields:
-  - Are you buying or selling: EL_BS_buyingOrSelling
+question: Do you need help preparing or clarifying a contract?
+fields: 
+  - no label: EL_BSP_wantsToPrepareOrClarifyContract
     datatype: radio
+    default: Yes
     choices:
-      - Buying property
-      - Selling property 
-  - Property Type: EL_BS_propertyType
-    datatype: radio
-    choices:
-      - Land
-      - Business
+      - Yes
+      - No, something else 
+  - "Please tell us what you need:": EL_BSP_userDescriptionOfHelpNeeded
+    input type: area
+    show if: 
+      variable: EL_BSP_wantsToPrepareOrClarifyContract
+      is: No, something else 
 ---
