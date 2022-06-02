@@ -3,4 +3,5 @@ question: Does the matter concern a data breach?
 fields:
   - no label: EL_IT_isDataBreach
     datatype: yesnoradio
+    default: True
 ---

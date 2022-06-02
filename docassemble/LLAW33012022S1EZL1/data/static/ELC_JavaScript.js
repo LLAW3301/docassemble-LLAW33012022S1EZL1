@@ -46,8 +46,10 @@ $(document).on('daPageLoad', function () {
   // keep track of number of completed questions
   ELC_step = daSteps + 1;
 
-  // move back button to above question (default position is in navbar)
-  $('#dabackbutton').prependTo('.da-page-header');
+  // chagne the style of the back button
+  $('.da-button-set .daquestionbackbutton')
+    .removeClass('btn-link')
+    .addClass('btn-light');
 
   // replace navbar with a custom one
   $('.navbar.fixed-top').replaceWith(
@@ -84,7 +86,7 @@ $(document).on('daPageLoad', function () {
   // replace footer with custom one
   $('footer.dafooter').replaceWith(
     `<footer class="ELC-footer"> 
-      <div style="display: flex;  align-items: center; flex-direction: row-reverse;margin-bottom: 14px;">
+      <div style="display: flex;  align-items: end; flex-direction: row-reverse;margin-bottom: 14px;">
         <div style="margin: 5px 10px;"><img src="https://staff.flinders.edu.au/etc.clientlibs/flinders/clientlibs/clientlib-site/resources/images/flinderuni_main_logo_black.png" height="40">
         </div>
         <div style="margin: 5px; text-align: right">
