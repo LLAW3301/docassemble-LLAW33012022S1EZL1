@@ -8,7 +8,7 @@ fields:
     datatype: files
     show if: EL_hasSupportingDocs
 ---
-question: What is the caption for this file "${ EL_supportingDocs[i].filename }"?
+question: What is the caption for the file "${ EL_supportingDocs[i].filename }"?
 subquestion: |
   Please briefly describe what this file contains
 fields:
