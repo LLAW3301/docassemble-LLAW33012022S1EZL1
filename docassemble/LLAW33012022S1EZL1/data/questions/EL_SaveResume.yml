@@ -12,10 +12,10 @@ code: |
   # confirm that user does really want to save and understand that the would receive 
   ## a link via email
   if EL_userWantsToSave == "yes":
-    # if we do not have the email, ask
+    # if we don't have the email yet, ask for a temporary for sending the session link
     if not defined('EL_User.email'):
       EL_tempEmail
-      # if no name yet, say "Hi there!" in the email.
+      # if no name was provided yet, say "Hi there!" in the email.
       EL_tempName = "there"
     else:
       EL_tempEmail = EL_User.email
@@ -23,8 +23,6 @@ code: |
       EL_tempName = EL_User.name.first
     # send the link to user's email address 
     if EL_sendResumeEmail: 
-      # no need to show the steps anymore
-      nav.hide()
       # reset the save and resume functionality (so that user can save again when
       ## resuming)
       # 1. delete the value of these variables to allow user to save later in the 
@@ -36,6 +34,9 @@ code: |
       EL_showSaveResumeScreen = False
       # show message when done
       log("Your answers have been saved! You can safely close the window now and resume later using the link sent to your email address.", "info")   
+      # delete the temporary email address, so user would be reasked unless email 
+      ## was provided at the Contact Details screen
+      del EL_tempEmail
   else:
     # reset the save and resume functionality (so that user can save again later 
     ## in the session even if they did not want to save now)
@@ -71,6 +72,7 @@ content: |
 question: What is your email address?
 fields:
   - no label: EL_tempEmail
+    default: tara0044@flinders.edu.au
 ---
 question: Did you want to save and resume later?
 subquestion: |

@@ -35,6 +35,8 @@ features:
   debug: False
   hide standard menu: True
   disable analytics: True
+  question back button: True
+  navigation back button: False
   navigation: True
   labels above fields: True
   inverse navbar: True
@@ -62,6 +64,8 @@ sections:
 ---
 default screen parts:
   under: |
+    <br>
+    <br>
     % if EL_showSaveResumeButton:
     [Save and resume later](${ url_action('EL_saveAndResume') })
     % endif
