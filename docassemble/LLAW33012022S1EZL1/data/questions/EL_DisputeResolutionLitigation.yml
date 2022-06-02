@@ -22,6 +22,7 @@ fields:
 ---
 depends on:
   - EL_AskWhatLegalProblem
+  - EL_DRL_LitigationArea
 if: |
   EL_AskWhatLegalProblem == "I am being sued"
 question: Please tell us why you are being sued
@@ -35,6 +36,7 @@ fields:
 ---
 depends on:
   - EL_AskWhatLegalProblem
+  - EL_DRL_LitigationArea
 if: |
   EL_AskWhatLegalProblem == "I want to sue someone"
 question: Please tell us why you want to sue the other party
