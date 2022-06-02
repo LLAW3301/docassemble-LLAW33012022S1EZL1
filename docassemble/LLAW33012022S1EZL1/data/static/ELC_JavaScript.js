@@ -46,10 +46,8 @@ $(document).on('daPageLoad', function () {
   // keep track of number of completed questions
   ELC_step = daSteps + 1;
 
-  // chagne the style of the back button
-  $('.da-button-set .daquestionbackbutton')
-    .removeClass('btn-link')
-    .addClass('btn-light');
+  // move back button to above question (default position is in navbar)
+  $('#dabackbutton').prependTo('.da-page-header');
 
   // replace navbar with a custom one
   $('.navbar.fixed-top').replaceWith(

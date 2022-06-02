@@ -12,6 +12,7 @@ fields:
       - Information Technology or Data Privacy
       - Building, Construction, or Infrastucture
       - Farming, Fishing, or Aquaculture
+      - Will or Estate Dispute 
       - Something else
   - "Please specify:": EL_DRL_userDescriptionOfArea
     input type: area
@@ -30,7 +31,7 @@ fields:
   - no label: EL_DRL_LitigationReason
     input type: area
     default: |
-      My employer wants to sue me because I let my mate enter the premises and he caused some damage.
+      My employer wants to sue me because I allowed unauthorised persons onto the premises and he caused some damage.
 ---
 depends on:
   - EL_AskWhatLegalProblem

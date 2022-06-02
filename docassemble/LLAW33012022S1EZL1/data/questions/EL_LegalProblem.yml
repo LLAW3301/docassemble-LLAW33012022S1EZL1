@@ -13,10 +13,11 @@ fields:
       - I want to buy a business
       - I want help with a contract
       - I was hurt/injured
-      - I need help making a Will
-      - I need help disputing a Will
-      - I need help with a divorce property settlement 
-      - Something else 
+      - I need help preparing a Will
+      - I need help preparing a Power of Attorney
+      - I need help preparing an Advanced Care Directive
+      - I need help with a divorce property settlement
+      - Something else
   - "Please specify:": EL_userDescriptionOfProblem
     input type: area
     show if: 

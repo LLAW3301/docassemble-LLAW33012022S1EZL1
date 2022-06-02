@@ -35,8 +35,6 @@ features:
   debug: False
   hide standard menu: True
   disable analytics: True
-  question back button: True
-  navigation back button: False
   navigation: True
   labels above fields: True
   inverse navbar: True
@@ -216,6 +214,14 @@ code: |
       # add question to the list of asked questions - see NOTE 1
       ## if user did not select a predefined value show their description
       EL_legalProblemSectionQs.append({ "question": "What sort of help do you require?", "variable_name": "EL_C_WorkNeeded", "value": EL_C_WorkNeeded if EL_C_WorkNeeded != "Other" else EL_C_userDescriptionOfWorkNeeded })
+    
+    ########## If Wills and Estate - I need help with Wills and Estates ##########
+    elif EL_AskWhatLegalProblem == "I need help with Wills and Estates":
+      # ask what help user specifically need
+      # tell user we don't deal with this area of law, but we are happy for them to 
+      ## continue to send their enquiry, so we may be able to refer them to someone 
+      ## who can help. 
+      EL_OutofScope
       
     ########## If Out-of-Scope Matter - I was hurt/injured ##########
     elif EL_AskWhatLegalProblem == "I was hurt/injured":
