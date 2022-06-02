@@ -4,7 +4,7 @@
 
 ## About
 
-This web application streamlines the initial intake process for Ezra Legal (a law firm). Ezra is able to obtain important preliminary information, and documents, from potential clients prior to the initial face-to-face meeting. Clients will have access to a modern and user-friendly web application that guides them through required questions. The information obtained will assist Ezra in identifying the legal issues and more importantly maximising the utility of the initial interview to obtain clearer instructions and reduce the risks of miscommunication.
+This web application streamlines the initial intake process for Ezra Legal (a law firm). Ezra is able to obtain important preliminary information, and documents, from potential clients prior to the initial face-to-face meeting. Ezra's clients will have access to a modern and user-friendly web application that guides them through required questions. The information obtained will assist Ezra in identifying the legal issues and more importantly maximising the utility of the initial interview to obtain clearer instructions and reduce the risks of miscommunication.
 
 ## Key Features 
 - User-friendly and interactive interface
